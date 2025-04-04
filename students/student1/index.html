@@ -1,151 +1,181 @@
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
 
 export default function StudentPortal() {
+  const [posts, setPosts] = useState([
+    { id: 1, content: "도서관 에어컨 너무 추워요 ㅠㅠ", likes: 0, comments: [], reported: false },
+    { id: 2, content: "편의점 신메뉴 존맛탱.. 추천함", likes: 0, comments: [], reported: false }
+  ]);
+  const [newPost, setNewPost] = useState("");
+  const [commentInputs, setCommentInputs] = useState({});
+  const [newEvent, setNewEvent] = useState({ name: "", title: "" });
+  const [eventList, setEventList] = useState([
+    { date: "5월 10일", title: "봄 축제" },
+    { date: "6월 1일", title: "동아리 전시회" },
+    { date: "6월 20일", title: "종강파티" }
+  ]);
+  const [activeTab, setActiveTab] = useState("shuttle");
+
+  const handlePost = () => {
+    if (newPost.trim() === "") return;
+    setPosts([
+      ...posts,
+      { id: posts.length + 1, content: newPost, likes: 0, comments: [], reported: false }
+    ]);
+    setNewPost("");
+  };
+
+  const handleLike = (id) => {
+    setPosts(posts.map(p => p.id === id ? { ...p, likes: p.likes + 1 } : p));
+  };
+
+  const handleReport = (id) => {
+    setPosts(posts.map(p => p.id === id ? { ...p, reported: true } : p));
+  };
+
+  const handleComment = (id) => {
+    const comment = commentInputs[id];
+    if (!comment || comment.trim() === "") return;
+    setPosts(posts.map(p => p.id === id ? { ...p, comments: [...p.comments, comment] } : p));
+    setCommentInputs({ ...commentInputs, [id]: "" });
+  };
+
+  const handleAddEvent = (e) => {
+    e.preventDefault();
+    if (newEvent.name.trim() === "" || newEvent.title.trim() === "") return;
+    const today = new Date();
+    const dateStr = `${today.getMonth() + 1}월 ${today.getDate()}일`;
+    setEventList([...eventList, { date: dateStr, title: newEvent.title }]);
+    setNewEvent({ name: "", title: "" });
+  };
+
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">🎓 학생 포털</h1>
 
-      <Tabs defaultValue="shuttle" className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="shuttle">🚌 셔틀버스</TabsTrigger>
-          <TabsTrigger value="schedule">📅 시간표 및 학사일정</TabsTrigger>
-          <TabsTrigger value="events">🎉 학교 행사</TabsTrigger>
-        </TabsList>
+      <div className="flex flex-wrap gap-2 mb-4">
+        <button onClick={() => setActiveTab("shuttle")} className="px-4 py-2 rounded bg-blue-100 hover:bg-blue-200">🚌 셔틀버스</button>
+        <button onClick={() => setActiveTab("schedule")} className="px-4 py-2 rounded bg-blue-100 hover:bg-blue-200">📅 시간표 및 학사일정</button>
+        <button onClick={() => setActiveTab("events")} className="px-4 py-2 rounded bg-blue-100 hover:bg-blue-200">🎉 학교 행사</button>
+        <button onClick={() => setActiveTab("bamboo")} className="px-4 py-2 rounded bg-blue-100 hover:bg-blue-200">🎋 대나무숲</button>
+      </div>
 
-        {/* 셔틀버스 정보 탭 */}
-        <TabsContent value="shuttle">
-          <Card>
-            <CardContent className="p-4">
-              <h2 className="text-xl font-semibold mb-2">셔틀버스 시간표</h2>
-              <ul className="list-disc list-inside space-y-1">
-                <li>08:00 - 정문 출발</li>
-                <li>09:30 - 후문 출발</li>
-                <li>12:00 - 기숙사 출발</li>
-                <li>17:00 - 캠퍼스 순환</li>
-              </ul>
-            </CardContent>
-          </Card>
-        </TabsContent>
+      {activeTab === "shuttle" && (
+        <div className="border p-4 rounded shadow">
+          <h2 className="text-xl font-semibold mb-2">셔틀버스 시간표</h2>
+          <ul className="list-disc list-inside space-y-1">
+            <li>08:00 - 정문 출발</li>
+            <li>09:30 - 후문 출발</li>
+            <li>12:00 - 기숙사 출발</li>
+            <li>17:00 - 캠퍼스 순환</li>
+          </ul>
+        </div>
+      )}
 
-        {/* 수업 시간표 및 학사일정 탭 */}
-        <TabsContent value="schedule">
-          <Card>
-            <CardContent className="p-4 space-y-6">
-              {/* 수업 시간표 (표 형태) */}
-              <div>
-                <h2 className="text-xl font-semibold mb-4">수업 시간표</h2>
-                <table className="w-full table-auto border border-gray-300 text-sm">
-                  <thead className="bg-gray-100">
-                    <tr>
-                      <th className="border px-4 py-2">요일</th>
-                      <th className="border px-4 py-2">과목</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="border px-4 py-2">월요일</td>
-                      <td className="border px-4 py-2">컴퓨터공학 / 수학</td>
-                    </tr>
-                    <tr>
-                      <td className="border px-4 py-2">화요일</td>
-                      <td className="border px-4 py-2">영어 / 프로그래밍</td>
-                    </tr>
-                    <tr>
-                      <td className="border px-4 py-2">수요일</td>
-                      <td className="border px-4 py-2">데이터베이스 / 자율학습</td>
-                    </tr>
-                    <tr>
-                      <td className="border px-4 py-2">목요일</td>
-                      <td className="border px-4 py-2">소프트웨어 공학 / 체육</td>
-                    </tr>
-                    <tr>
-                      <td className="border px-4 py-2">금요일</td>
-                      <td className="border px-4 py-2">프로젝트 실습</td>
-                    </tr>
-                  </tbody>
-                </table>
+      {activeTab === "schedule" && (
+        <div className="space-y-6">
+          <div className="border p-4 rounded shadow">
+            <h2 className="text-xl font-semibold mb-4">수업 시간표</h2>
+            <table className="w-full table-auto border border-gray-300 text-sm">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="border px-4 py-2">요일</th>
+                  <th className="border px-4 py-2">과목</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td className="border px-4 py-2">월요일</td><td className="border px-4 py-2">컴퓨터공학 / 수학</td></tr>
+                <tr><td className="border px-4 py-2">화요일</td><td className="border px-4 py-2">영어 / 프로그래밍</td></tr>
+                <tr><td className="border px-4 py-2">수요일</td><td className="border px-4 py-2">데이터베이스 / 자율학습</td></tr>
+                <tr><td className="border px-4 py-2">목요일</td><td className="border px-4 py-2">소프트웨어 공학 / 체육</td></tr>
+                <tr><td className="border px-4 py-2">금요일</td><td className="border px-4 py-2">프로젝트 실습</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div className="border p-4 rounded shadow">
+            <h2 className="text-xl font-semibold mb-4">학사일정</h2>
+            <div className="grid grid-cols-7 gap-2 text-center text-xs">
+              {["일", "월", "화", "수", "목", "금", "토"].map(day => <div key={day} className="font-bold">{day}</div>)}
+              {Array.from({ length: 30 }, (_, i) => {
+                const day = i + 1;
+                return (
+                  <div
+                    key={day}
+                    className={`p-2 rounded border text-center ${
+                      (day >= 15 && day <= 19) ? "bg-yellow-200" :
+                      (day >= 10 && day <= 14) ? "bg-red-200" :
+                      (day === 5 || day === 6) ? "bg-blue-200" : ""
+                    }`}
+                  >{day}</div>
+                );
+              })}
+            </div>
+            <div className="mt-2 text-xs space-y-1">
+              <div><span className="inline-block w-3 h-3 bg-yellow-200 mr-2"></span>중간고사</div>
+              <div><span className="inline-block w-3 h-3 bg-red-200 mr-2"></span>기말고사</div>
+              <div><span className="inline-block w-3 h-3 bg-blue-200 mr-2"></span>공휴일</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === "events" && (
+        <div className="border p-4 rounded shadow space-y-4">
+          <div>
+            <h2 className="text-xl font-semibold mb-2">다가오는 행사</h2>
+            <ul className="list-disc list-inside">
+              {eventList.map((event, index) => (
+                <li key={index}>{event.date} - {event.title}</li>
+              ))}
+            </ul>
+          </div>
+          <form onSubmit={handleAddEvent} className="space-y-2">
+            <input type="text" placeholder="이름" value={newEvent.name} onChange={e => setNewEvent({ ...newEvent, name: e.target.value })} className="border rounded p-2 w-full" />
+            <input type="text" placeholder="참가할 행사명" value={newEvent.title} onChange={e => setNewEvent({ ...newEvent, title: e.target.value })} className="border rounded p-2 w-full" />
+            <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">신청하기</button>
+          </form>
+        </div>
+      )}
+
+      {activeTab === "bamboo" && (
+        <div className="border p-4 rounded shadow space-y-4">
+          <h2 className="text-xl font-semibold">🎋 익명 대나무숲</h2>
+          {posts.map(post => (
+            <div key={post.id} className="border rounded p-3 bg-gray-50 space-y-2">
+              <div>{post.content}</div>
+              <div className="flex gap-3 text-sm">
+                <button onClick={() => handleLike(post.id)} className="border px-2 py-1 rounded">👍 {post.likes}</button>
+                <button onClick={() => handleReport(post.id)} disabled={post.reported} className="border px-2 py-1 rounded">
+                  {post.reported ? "🚨 신고됨" : "🚨 신고"}
+                </button>
               </div>
-
-              {/* 학사일정 (달력 디자인) */}
               <div>
-                <h2 className="text-xl font-semibold mb-4">학사일정</h2>
-                <div className="grid grid-cols-7 gap-2 text-center text-xs">
-                  <div className="font-bold">일</div>
-                  <div className="font-bold">월</div>
-                  <div className="font-bold">화</div>
-                  <div className="font-bold">수</div>
-                  <div className="font-bold">목</div>
-                  <div className="font-bold">금</div>
-                  <div className="font-bold">토</div>
-
-                  {Array.from({ length: 30 }, (_, i) => {
-                    const day = i + 1;
-                    const isHoliday =
-                      day === 5 || // 어린이날
-                      day === 6 || // 현충일
-                      (day >= 15 && day <= 19) || // 중간고사
-                      (day >= 10 && day <= 14); // 기말고사
-                    return (
-                      <div
-                        key={day}
-                        className={`p-2 rounded border text-center ${
-                          (day >= 15 && day <= 19) ? "bg-yellow-200" :
-                          (day >= 10 && day <= 14) ? "bg-red-200" :
-                          (day === 5 || day === 6) ? "bg-blue-200" : ""
-                        }`}
-                      >
-                        {day}
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="mt-2 text-xs space-y-1">
-                  <div><span className="inline-block w-3 h-3 bg-yellow-200 mr-2"></span>중간고사</div>
-                  <div><span className="inline-block w-3 h-3 bg-red-200 mr-2"></span>기말고사</div>
-                  <div><span className="inline-block w-3 h-3 bg-blue-200 mr-2"></span>공휴일</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* 학교 행사 및 참가 신청 탭 */}
-        <TabsContent value="events">
-          <Card>
-            <CardContent className="p-4 space-y-4">
-              <div>
-                <h2 className="text-xl font-semibold mb-2">다가오는 행사</h2>
-                <ul className="list-disc list-inside">
-                  <li>5월 10일 - 봄 축제</li>
-                  <li>6월 1일 - 동아리 전시회</li>
-                  <li>6월 20일 - 종강파티</li>
+                <input
+                  type="text"
+                  className="border rounded p-1 text-sm w-full"
+                  placeholder="댓글 작성..."
+                  value={commentInputs[post.id] || ""}
+                  onChange={e => setCommentInputs({ ...commentInputs, [post.id]: e.target.value })}
+                />
+                <button onClick={() => handleComment(post.id)} className="mt-1 bg-blue-500 text-white text-sm px-2 py-1 rounded">댓글 달기</button>
+                <ul className="mt-2 list-disc list-inside text-xs text-gray-600 space-y-1">
+                  {post.comments.map((comment, i) => <li key={i}>{comment}</li>)}
                 </ul>
               </div>
-
-              <div>
-                <h2 className="text-xl font-semibold mb-2">참가 신청</h2>
-                <form className="space-y-2">
-                  <input
-                    type="text"
-                    placeholder="이름"
-                    className="border rounded p-2 w-full"
-                  />
-                  <select className="border rounded p-2 w-full">
-                    <option>참가할 행사 선택</option>
-                    <option>봄 축제</option>
-                    <option>동아리 전시회</option>
-                    <option>종강파티</option>
-                  </select>
-                  <Button type="submit">신청하기</Button>
-                </form>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </div>
+          ))}
+          <div className="flex gap-2 mt-4">
+            <input
+              type="text"
+              value={newPost}
+              onChange={e => setNewPost(e.target.value)}
+              placeholder="익명으로 하고 싶은 말을 남겨보세요"
+              className="border rounded p-2 flex-1"
+            />
+            <button onClick={handlePost} className="bg-blue-500 text-white px-4 py-2 rounded">작성</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
