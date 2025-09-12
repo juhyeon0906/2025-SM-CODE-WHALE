@@ -1,132 +1,343 @@
+<!-- register.html -->
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>성적 그래프 (절대평가)</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-    }
-    .subject {
-      margin-bottom: 40px;
-    }
-    canvas {
-      max-width: 600px;
-    }
-    .grade-output {
-      margin-top: 10px;
-      font-weight: bold;
-    }
-  </style>
+  <title>회원가입</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>📊 성적 그래프 (절대평가)</h1>
-
-  <div class="subject">
-    <h2>국어 성적</h2>
-    <input type="text" id="koreanInput" placeholder="예: 85, 90, 92, 88">
-    <canvas id="koreanChart"></canvas>
-    <div class="grade-output" id="koreanGrades"></div>
+  <h2>회원가입</h2>
+  <form id="registerForm">
+    <div>
+      <label>아이디: <input type="text" id="regUsername" required></label>
+    </div>
+    <div>
+      <label>비밀번호: <input type="password" id="regPassword" required></label>
+    </div>
+    <button type="submit">가입하기</button>
+  </form>
+  <div>
+    <a href="login.html">로그인으로</a>
   </div>
-
-  <div class="subject">
-    <h2>영어 성적</h2>
-    <input type="text" id="englishInput" placeholder="예: 78, 82, 85, 80">
-    <canvas id="englishChart"></canvas>
-    <div class="grade-output" id="englishGrades"></div>
-  </div>
-
-  <div class="subject">
-    <h2>수학 성적</h2>
-    <input type="text" id="mathInput" placeholder="예: 92, 89, 95, 98">
-    <canvas id="mathChart"></canvas>
-    <div class="grade-output" id="mathGrades"></div>
-  </div>
-
-  <button onclick="drawAllCharts()">그래프 그리기</button>
-
   <script>
-    let charts = {};
+    document.getElementById('registerForm')
+      .addEventListener('submit', function(event) {
+        event.preventDefault();
+        const username = document.getElementById('regUsername').value.trim();
+        const password = document.getElementById('regPassword').value;
 
-    // 절대평가 등급 기준
-    function getAbsoluteGrade(score) {
-      if (score >= 90) return 1;
-      if (score >= 80) return 2;
-      if (score >= 70) return 3;
-      if (score >= 60) return 4;
-      return 5;
-    }
-
-    // 등급별 색상
-    const gradeColors = {
-      1: "rgba(255, 99, 132, 1)",    // 빨강
-      2: "rgba(255, 159, 64, 1)",    // 주황
-      3: "rgba(255, 205, 86, 1)",    // 노랑
-      4: "rgba(75, 192, 192, 1)",    // 초록
-      5: "rgba(201, 203, 207, 1)"    // 회색
-    };
-
-    function drawChart(subject, inputId, canvasId, gradeOutputId) {
-      const rawInput = document.getElementById(inputId).value;
-      const scores = rawInput.split(",").map(s => parseFloat(s.trim())).filter(s => !isNaN(s));
-      const labels = scores.map((_, i) => `시험 ${i + 1}`);
-      const grades = scores.map(getAbsoluteGrade);
-      const pointColors = grades.map(g => gradeColors[g]);
-
-      const ctx = document.getElementById(canvasId).getContext('2d');
-      if (charts[canvasId]) {
-        charts[canvasId].destroy();
-      }
-
-      charts[canvasId] = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: `${subject} 성적`,
-            data: scores,
-            borderColor: 'rgba(54, 162, 235, 1)',
-            backgroundColor: 'rgba(54, 162, 235, 0.3)',
-            tension: 0.3,
-            fill: false,
-            pointBackgroundColor: pointColors,
-            pointBorderColor: pointColors,
-            pointRadius: 6,
-            pointHoverRadius: 8
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  const i = context.dataIndex;
-                  return `점수: ${scores[i]}점, 등급: ${grades[i]}등급`;
-                }
-              }
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 100
-            }
-          }
+        if (!username || !password) {
+          alert('아이디와 비밀번호 모두 입력해주세요.');
+          return;
         }
+
+        // 기존 사용자들 가져오기
+        const usersJSON = localStorage.getItem('users') || '[]';
+        const users = JSON.parse(usersJSON);
+
+        // 이미 존재하는 아이디인지 확인
+        if (users.find(u => u.username === username)) {
+          alert('이미 존재하는 아이디입니다.');
+          return;
+        }
+
+        // 새 사용자 추가
+        users.push({ username, password });
+        localStorage.setItem('users', JSON.stringify(users));
+
+        alert('가입 성공, 로그인 페이지로 이동합니다.');
+        window.location.href = 'login.html';
       });
-
-      const gradeText = grades.map((g, i) => `시험 ${i + 1}: ${g}등급`).join(" / ");
-      document.getElementById(gradeOutputId).innerText = `등급 결과: ${gradeText}`;
-    }
-
-    function drawAllCharts() {
-      drawChart("국어", "koreanInput", "koreanChart", "koreanGrades");
-      drawChart("영어", "englishInput", "englishChart", "englishGrades");
-      drawChart("수학", "mathInput", "mathChart", "mathGrades");
-    }
   </script>
 </body>
 </html>
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>로그인</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>로그인</h2>
+  <form id="loginForm">
+    <div>
+      <label>아이디: <input type="text" id="loginUsername" required></label>
+    </div>
+    <div>
+      <label>비밀번호: <input type="password" id="loginPassword" required></label>
+    </div>
+    <button type="submit">로그인</button>
+  </form>
+  <div>
+    <a href="register.html">회원가입으로</a>
+  </div>
+  <script>
+    document.getElementById('loginForm')
+      .addEventListener('submit', function(event) {
+        event.preventDefault();
+        const username = document.getElementById('loginUsername').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        const usersJSON = localStorage.getItem('users') || '[]';
+        const users = JSON.parse(usersJSON);
+
+        const found = users.find(u => u.username === username && u.password === password);
+        if (!found) {
+          alert('아이디 또는 비밀번호가 틀렸습니다.');
+          return;
+        }
+
+        // 로그인 상태 저장
+        localStorage.setItem('loggedInUser', username);
+
+        // 대시보드로 이동
+        window.location.href = 'dashboard.html';
+      });
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>대시보드 - 대나무숲</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="nav">
+    <span id="welcomeText"></span>
+    <button id="logoutBtn">로그아웃</button>
+  </div>
+
+  <div id="boardSection">
+    <h2>학교 대나무숲</h2>
+
+    <div id="searchSection">
+      <input type="text" id="searchInput" placeholder="제목 또는 내용으로 검색">
+      <button id="searchBtn">검색</button>
+      <button id="showAllBtn">전체 보기</button>
+    </div>
+
+    <div id="postFormSection">
+      <h3>글쓰기 (익명)</h3>
+      <form id="postForm">
+        <div>
+          <label>제목: <input type="text" id="postTitle" required></label>
+        </div>
+        <div>
+          <label>내용: <textarea id="postContent" required></textarea></label>
+        </div>
+        <button type="submit">작성</button>
+      </form>
+    </div>
+
+    <div id="postsListSection">
+      <ul id="postsList"></ul>
+    </div>
+
+    <div id="paginationSection"></div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script src="board.js"></script>
+</body>
+</html>
+// board.js
+
+// 로그인 상태 체크
+document.addEventListener('DOMContentLoaded', function() {
+  const user = localStorage.getItem('loggedInUser');
+  if (!user) {
+    alert('로그인이 필요합니다.');
+    window.location.href = 'login.html';
+    return;
+  }
+  document.getElementById('welcomeText').innerText = `환영합니다, ${user}님`;
+
+  // 게시판 초기화
+  loadPosts();
+});
+
+// 로그아웃
+document.getElementById('logoutBtn').addEventListener('click', function() {
+  localStorage.removeItem('loggedInUser');
+  window.location.href = 'login.html';
+});
+
+// 글쓰기
+document.getElementById('postForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  const title = document.getElementById('postTitle').value.trim();
+  const content = document.getElementById('postContent').value.trim();
+  if (!title || !content) {
+    alert('제목과 내용을 모두 입력하세요.');
+    return;
+  }
+
+  // 불러오기
+  const postsJSON = localStorage.getItem('posts') || '[]';
+  const posts = JSON.parse(postsJSON);
+
+  // 새 글 (익명)
+  const newPost = {
+    id: Date.now(),  // 고유 ID
+    title,
+    content,
+    date: new Date().toISOString()
+  };
+
+  posts.unshift(newPost);  // 최신 글이 위로
+  localStorage.setItem('posts', JSON.stringify(posts));
+
+  // 폼 초기화
+  document.getElementById('postTitle').value = '';
+  document.getElementById('postContent').value = '';
+
+  // 목록 다시 로딩: 첫 페이지
+  loadPosts();
+});
+
+// 검색
+document.getElementById('searchBtn').addEventListener('click', function() {
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+  loadPosts(query);
+});
+document.getElementById('showAllBtn').addEventListener('click', function() {
+  document.getElementById('searchInput').value = '';
+  loadPosts();
+});
+
+let currentPage = 1;
+const postsPerPage = 20;
+
+function loadPosts(searchQuery = '') {
+  const postsJSON = localStorage.getItem('posts') || '[]';
+  const allPosts = JSON.parse(postsJSON);
+
+  // 검색 필터링
+  let filtered = allPosts;
+  if (searchQuery) {
+    filtered = allPosts.filter(p => 
+      p.title.toLowerCase().includes(searchQuery) ||
+      p.content.toLowerCase().includes(searchQuery)
+    );
+  }
+
+  // 페이지네이션 계산
+  const totalPosts = filtered.length;
+  const totalPages = Math.ceil(totalPosts / postsPerPage);
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
+
+  const startIndex = (currentPage -1) * postsPerPage;
+  const endIndex = startIndex + postsPerPage;
+  const pagePosts = filtered.slice(startIndex, endIndex);
+
+  // 목록 렌더링
+  const listEl = document.getElementById('postsList');
+  listEl.innerHTML = '';
+  if (pagePosts.length === 0) {
+    listEl.innerHTML = '<li>글이 없습니다.</li>';
+  } else {
+    pagePosts.forEach(p => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <strong>${p.title}</strong> <span class="date">(${new Date(p.date).toLocaleString()})</span>
+        <p>${p.content}</p>
+      `;
+      listEl.appendChild(li);
+    });
+  }
+
+  // 페이지네이션 UI
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+  const pagSection = document.getElementById('paginationSection');
+  pagSection.innerHTML = '';
+
+  if (totalPages <= 1) return;  // 페이지 하나면 필요 없음
+
+  const prevBtn = document.createElement('button');
+  prevBtn.innerText = '이전';
+  prevBtn.disabled = (currentPage === 1);
+  prevBtn.addEventListener('click', function() {
+    currentPage--;
+    loadPosts(document.getElementById('searchInput').value.trim().toLowerCase());
+  });
+  pagSection.appendChild(prevBtn);
+
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement('button');
+    btn.innerText = i;
+    if (i === currentPage) {
+      btn.disabled = true;
+      btn.classList.add('activePage');
+    }
+    btn.addEventListener('click', function() {
+      currentPage = i;
+      loadPosts(document.getElementById('searchInput').value.trim().toLowerCase());
+    });
+    pagSection.appendChild(btn);
+  }
+
+  const nextBtn = document.createElement('button');
+  nextBtn.innerText = '다음';
+  nextBtn.disabled = (currentPage === totalPages);
+  nextBtn.addEventListener('click', function() {
+    currentPage++;
+    loadPosts(document.getElementById('searchInput').value.trim().toLowerCase());
+  });
+  pagSection.appendChild(nextBtn);
+}
+/* style.css */
+
+body {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+
+#nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#boardSection {
+  margin-top: 30px;
+}
+
+#searchSection {
+  margin-bottom: 20px;
+}
+
+#postFormSection {
+  margin-bottom: 30px;
+}
+
+#postsList li {
+  list-style: none;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+#postsList li .date {
+  color: #666;
+  font-size: 0.9em;
+  margin-left: 10px;
+}
+
+#paginationSection button {
+  margin: 2px;
+}
+
+#paginationSection button.activePage {
+  font-weight: bold;
+  text-decoration: underline;
+}
