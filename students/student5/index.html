@@ -1,147 +1,227 @@
-<!-- register.html -->
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>회원가입</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h2>회원가입</h2>
-  <form id="registerForm">
-    <div>
-      <label>아이디: <input type="text" id="regUsername" required></label>
-    </div>
-    <div>
-      <label>비밀번호: <input type="password" id="regPassword" required></label>
-    </div>
-    <button type="submit">가입하기</button>
-  </form>
-  <div>
-    <a href="login.html">로그인으로</a>
-  </div>
-  <script>
-    document.getElementById('registerForm')
-      .addEventListener('submit', function(event) {
-        event.preventDefault();
-        const username = document.getElementById('regUsername').value.trim();
-        const password = document.getElementById('regPassword').value;
+// board.js
 
-        if (!username || !password) {
-          alert('아이디와 비밀번호 모두 입력해주세요.');
-          return;
-        }
+document.addEventListener('DOMContentLoaded', function() {
+  const user = localStorage.getItem('loggedInUser');
+  if (!user) {
+    alert('로그인이 필요합니다.');
+    window.location.href = 'login.html';
+    return;
+  }
+  document.getElementById('welcomeText').innerText = `환영합니다, ${user}님`;
 
-        // 기존 사용자들 가져오기
-        const usersJSON = localStorage.getItem('users') || '[]';
-        const users = JSON.parse(usersJSON);
+  // 이벤트 핸들러 설정
+  document.getElementById('logoutBtn').addEventListener('click', function() {
+    localStorage.removeItem('loggedInUser');
+    window.location.href = 'login.html';
+  });
 
-        // 이미 존재하는 아이디인지 확인
-        if (users.find(u => u.username === username)) {
-          alert('이미 존재하는 아이디입니다.');
-          return;
-        }
+  document.getElementById('postForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    createPost();
+  });
 
-        // 새 사용자 추가
-        users.push({ username, password });
-        localStorage.setItem('users', JSON.stringify(users));
+  document.getElementById('searchBtn').addEventListener('click', function() {
+    const query = document.getElementById('searchInput').value.trim().toLowerCase();
+    currentPage = 1;
+    loadPosts(query);
+  });
 
-        alert('가입 성공, 로그인 페이지로 이동합니다.');
-        window.location.href = 'login.html';
-      });
-  </script>
-</body>
-</html>
-<!-- login.html -->
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>로그인</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h2>로그인</h2>
-  <form id="loginForm">
-    <div>
-      <label>아이디: <input type="text" id="loginUsername" required></label>
-    </div>
-    <div>
-      <label>비밀번호: <input type="password" id="loginPassword" required></label>
-    </div>
-    <button type="submit">로그인</button>
-  </form>
-  <div>
-    <a href="register.html">회원가입으로</a>
-  </div>
-  <script>
-    document.getElementById('loginForm')
-      .addEventListener('submit', function(event) {
-        event.preventDefault();
-        const username = document.getElementById('loginUsername').value.trim();
-        const password = document.getElementById('loginPassword').value;
+  document.getElementById('showAllBtn').addEventListener('click', function() {
+    document.getElementById('searchInput').value = '';
+    currentPage = 1;
+    loadPosts();
+  });
 
-        const usersJSON = localStorage.getItem('users') || '[]';
-        const users = JSON.parse(usersJSON);
+  loadPosts();  // 초기 로드
+});
 
-        const found = users.find(u => u.username === username && u.password === password);
-        if (!found) {
-          alert('아이디 또는 비밀번호가 틀렸습니다.');
-          return;
-        }
+let currentPage = 1;
+const postsPerPage = 20;
 
-        // 로그인 상태 저장
-        localStorage.setItem('loggedInUser', username);
+function createPost() {
+  const title = document.getElementById('postTitle').value.trim();
+  const content = document.getElementById('postContent').value.trim();
+  if (!title || !content) {
+    alert('제목과 내용을 모두 입력하세요.');
+    return;
+  }
 
-        // 대시보드로 이동
-        window.location.href = 'dashboard.html';
-      });
-  </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>대시보드 - 대나무숲</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div id="nav">
-    <span id="welcomeText"></span>
-    <button id="logoutBtn">로그아웃</button>
-  </div>
+  const postsJSON = localStorage.getItem('posts') || '[]';
+  const posts = JSON.parse(postsJSON);
 
-  <div id="boardSection">
-    <h2>학교 대나무숲</h2>
+  const newPost = {
+    id: Date.now(),  // 고유 ID
+    title,
+    content,
+    date: new Date().toISOString()
+  };
 
-    <div id="searchSection">
-      <input type="text" id="searchInput" placeholder="제목 또는 내용으로 검색">
-      <button id="searchBtn">검색</button>
-      <button id="showAllBtn">전체 보기</button>
-    </div>
+  posts.unshift(newPost);
+  localStorage.setItem('posts', JSON.stringify(posts));
 
-    <div id="postFormSection">
-      <h3>글쓰기 (익명)</h3>
-      <form id="postForm">
-        <div>
-          <label>제목: <input type="text" id="postTitle" required></label>
-        </div>
-        <div>
-          <label>내용: <textarea id="postContent" required></textarea></label>
-        </div>
-        <button type="submit">작성</button>
-      </form>
-    </div>
+  document.getElementById('postTitle').value = '';
+  document.getElementById('postContent').value = '';
 
-    <div id="postsListSection">
-      <ul id="postsList"></ul>
-    </div>
+  currentPage = 1;
+  loadPosts();
+}
 
-    <div id="paginationSection"></div>
-  </div>
+function loadPosts(searchQuery = '') {
+  const postsJSON = localStorage.getItem('posts') || '[]';
+  const allPosts = JSON.parse(postsJSON);
 
-  <script src="auth.js"></script>
-  <script src="board.js"></script>
-</body>
-</html>
+  let filtered = allPosts;
+  if (searchQuery) {
+    filtered = allPosts.filter(p =>
+      p.title.toLowerCase().includes(searchQuery) ||
+      p.content.toLowerCase().includes(searchQuery)
+    );
+  }
+
+  const totalPosts = filtered.length;
+  const totalPages = Math.ceil(totalPosts / postsPerPage);
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
+
+  const startIndex = (currentPage - 1) * postsPerPage;
+  const endIndex = startIndex + postsPerPage;
+  const pagePosts = filtered.slice(startIndex, endIndex);
+
+  renderPosts(pagePosts);
+  renderPagination(totalPages);
+}
+
+function renderPosts(postsArray) {
+  const listEl = document.getElementById('postsList');
+  listEl.innerHTML = '';
+
+  if (postsArray.length === 0) {
+    listEl.innerHTML = '<li>글이 없습니다.</li>';
+    return;
+  }
+
+  postsArray.forEach(p => {
+    const li = document.createElement('li');
+    li.setAttribute('data-id', p.id);
+    li.innerHTML = `
+      <strong>${escapeHtml(p.title)}</strong> <span class="date">(${new Date(p.date).toLocaleString()})</span>
+      <p>${escapeHtml(p.content)}</p>
+      <button class="editBtn">수정</button> 
+      <button class="deleteBtn">삭제</button>
+    `;
+    listEl.appendChild(li);
+  });
+
+  // 수정 / 삭제 버튼 이벤트 붙이기
+  document.querySelectorAll('.deleteBtn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const li = this.closest('li');
+      const postId = Number(li.dataset.id);
+      deletePost(postId);
+    });
+  });
+
+  document.querySelectorAll('.editBtn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const li = this.closest('li');
+      const postId = Number(li.dataset.id);
+      showEditForm(li, postId);
+    });
+  });
+}
+
+function deletePost(postId) {
+  if (!confirm('정말 삭제하시겠습니까?')) return;
+
+  const postsJSON = localStorage.getItem('posts') || '[]';
+  const posts = JSON.parse(postsJSON);
+
+  const newPosts = posts.filter(p => p.id !== postId);
+  localStorage.setItem('posts', JSON.stringify(newPosts));
+  loadPosts(document.getElementById('searchInput').value.trim().toLowerCase());
+}
+
+function showEditForm(liElement, postId) {
+  // liElement 내부에 편집용 입력창을 삽입
+  const postsJSON = localStorage.getItem('posts') || '[]';
+  const posts = JSON.parse(postsJSON);
+  const post = posts.find(p => p.id === postId);
+  if (!post) return;
+
+  // 원래 내용 숨기기
+  liElement.innerHTML = `
+    제목: <input type="text" class="editTitle" value="${escapeHtml(post.title)}"><br>
+    내용: <textarea class="editContent">${escapeHtml(post.content)}</textarea><br>
+    <button class="saveEditBtn">저장</button>
+    <button class="cancelEditBtn">취소</button>
+  `;
+
+  // 저장 버튼
+  liElement.querySelector('.saveEditBtn').addEventListener('click', function() {
+    const newTitle = liElement.querySelector('.editTitle').value.trim();
+    const newContent = liElement.querySelector('.editContent').value.trim();
+    if (!newTitle || !newContent) {
+      alert('제목과 내용을 모두 입력하세요.');
+      return;
+    }
+
+    // 저장
+    post.title = newTitle;
+    post.content = newContent;
+    post.date = new Date().toISOString();  // 수정 시간 반영하느냐는 선택
+    
+    localStorage.setItem('posts', JSON.stringify(posts));
+    loadPosts(document.getElementById('searchInput').value.trim().toLowerCase());
+  });
+
+  // 취소 버튼
+  liElement.querySelector('.cancelEditBtn').addEventListener('click', function() {
+    loadPosts(document.getElementById('searchInput').value.trim().toLowerCase());
+  });
+}
+
+function renderPagination(totalPages) {
+  const pagSection = document.getElementById('paginationSection');
+  pagSection.innerHTML = '';
+
+  if (totalPages <= 1) return;
+
+  const prevBtn = document.createElement('button');
+  prevBtn.innerText = '이전';
+  prevBtn.disabled = (currentPage === 1);
+  prevBtn.addEventListener('click', function() {
+    currentPage--;
+    loadPosts(document.getElementById('searchInput').value.trim().toLowerCase());
+  });
+  pagSection.appendChild(prevBtn);
+
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement('button');
+    btn.innerText = i;
+    if (i === currentPage) {
+      btn.disabled = true;
+      btn.classList.add('activePage');
+    }
+    btn.addEventListener('click', function() {
+      currentPage = i;
+      loadPosts(document.getElementById('searchInput').value.trim().toLowerCase());
+    });
+    pagSection.appendChild(btn);
+  }
+
+  const nextBtn = document.createElement('button');
+  nextBtn.innerText = '다음';
+  nextBtn.disabled = (currentPage === totalPages);
+  nextBtn.addEventListener('click', function() {
+    currentPage++;
+    loadPosts(document.getElementById('searchInput').value.trim().toLowerCase());
+  });
+  pagSection.appendChild(nextBtn);
+}
+
+// XSS 방지용 단순 escape 함수
+function escapeHtml(string) {
+  const div = document.createElement('div');
+  div.innerText = string;
+  return div.innerHTML;
+}
