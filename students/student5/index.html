@@ -1,227 +1,78 @@
-// board.js
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>학교 대나무숲</title>
+  <link rel="stylesheet" href="bamboo.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🏫 학교 대나무숲</h1>
+    </header>
 
-document.addEventListener('DOMContentLoaded', function() {
-  const user = localStorage.getItem('loggedInUser');
-  if (!user) {
-    alert('로그인이 필요합니다.');
-    window.location.href = 'login.html';
-    return;
-  }
-  document.getElementById('welcomeText').innerText = `환영합니다, ${user}님`;
+    <!-- 로그인 상태 표시 -->
+    <div class="user-status">
+      <span>👤 홍길동님 환영합니다.</span>
+      <button>로그아웃</button>
+    </div>
 
-  // 이벤트 핸들러 설정
-  document.getElementById('logoutBtn').addEventListener('click', function() {
-    localStorage.removeItem('loggedInUser');
-    window.location.href = 'login.html';
-  });
+    <!-- 글쓰기 -->
+    <section class="post-form">
+      <h2>✍️ 익명 글쓰기</h2>
+      <form>
+        <input type="text" placeholder="제목을 입력하세요" required>
+        <textarea placeholder="내용을 입력하세요" required></textarea>
+        <button type="submit">작성</button>
+      </form>
+    </section>
 
-  document.getElementById('postForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    createPost();
-  });
+    <!-- 검색창 -->
+    <div class="search-bar">
+      <input type="text" placeholder="제목 또는 내용으로 검색">
+      <button>검색</button>
+      <button>전체 보기</button>
+    </div>
 
-  document.getElementById('searchBtn').addEventListener('click', function() {
-    const query = document.getElementById('searchInput').value.trim().toLowerCase();
-    currentPage = 1;
-    loadPosts(query);
-  });
+    <!-- 게시글 목록 -->
+    <section class="post-list">
+      <article class="post">
+        <h3>익명의 고민</h3>
+        <p class="date">2025-09-12 14:32</p>
+        <p class="content">시험 너무 어려웠어요... 다들 어땠나요?</p>
+        <div class="post-buttons">
+          <button>수정</button>
+          <button>삭제</button>
+        </div>
+        <!-- 댓글 UI -->
+        <div class="comments">
+          <p class="comment"><strong>익명1:</strong> 저도요... 국어 진짜...</p>
+          <p class="comment"><strong>익명2:</strong> 수학은 괜찮았는데 ㅠㅠ</p>
+        </div>
+      </article>
 
-  document.getElementById('showAllBtn').addEventListener('click', function() {
-    document.getElementById('searchInput').value = '';
-    currentPage = 1;
-    loadPosts();
-  });
+      <article class="post">
+        <h3>동아리 추천해주세요</h3>
+        <p class="date">2025-09-10 10:15</p>
+        <p class="content">1학년인데 동아리 뭘 들어야 할지 모르겠어요!</p>
+        <div class="post-buttons">
+          <button>수정</button>
+          <button>삭제</button>
+        </div>
+        <div class="comments">
+          <p class="comment"><strong>익명1:</strong> 방송부 재밌어요!</p>
+        </div>
+      </article>
+    </section>
 
-  loadPosts();  // 초기 로드
-});
-
-let currentPage = 1;
-const postsPerPage = 20;
-
-function createPost() {
-  const title = document.getElementById('postTitle').value.trim();
-  const content = document.getElementById('postContent').value.trim();
-  if (!title || !content) {
-    alert('제목과 내용을 모두 입력하세요.');
-    return;
-  }
-
-  const postsJSON = localStorage.getItem('posts') || '[]';
-  const posts = JSON.parse(postsJSON);
-
-  const newPost = {
-    id: Date.now(),  // 고유 ID
-    title,
-    content,
-    date: new Date().toISOString()
-  };
-
-  posts.unshift(newPost);
-  localStorage.setItem('posts', JSON.stringify(posts));
-
-  document.getElementById('postTitle').value = '';
-  document.getElementById('postContent').value = '';
-
-  currentPage = 1;
-  loadPosts();
-}
-
-function loadPosts(searchQuery = '') {
-  const postsJSON = localStorage.getItem('posts') || '[]';
-  const allPosts = JSON.parse(postsJSON);
-
-  let filtered = allPosts;
-  if (searchQuery) {
-    filtered = allPosts.filter(p =>
-      p.title.toLowerCase().includes(searchQuery) ||
-      p.content.toLowerCase().includes(searchQuery)
-    );
-  }
-
-  const totalPosts = filtered.length;
-  const totalPages = Math.ceil(totalPosts / postsPerPage);
-  if (currentPage > totalPages) currentPage = totalPages;
-  if (currentPage < 1) currentPage = 1;
-
-  const startIndex = (currentPage - 1) * postsPerPage;
-  const endIndex = startIndex + postsPerPage;
-  const pagePosts = filtered.slice(startIndex, endIndex);
-
-  renderPosts(pagePosts);
-  renderPagination(totalPages);
-}
-
-function renderPosts(postsArray) {
-  const listEl = document.getElementById('postsList');
-  listEl.innerHTML = '';
-
-  if (postsArray.length === 0) {
-    listEl.innerHTML = '<li>글이 없습니다.</li>';
-    return;
-  }
-
-  postsArray.forEach(p => {
-    const li = document.createElement('li');
-    li.setAttribute('data-id', p.id);
-    li.innerHTML = `
-      <strong>${escapeHtml(p.title)}</strong> <span class="date">(${new Date(p.date).toLocaleString()})</span>
-      <p>${escapeHtml(p.content)}</p>
-      <button class="editBtn">수정</button> 
-      <button class="deleteBtn">삭제</button>
-    `;
-    listEl.appendChild(li);
-  });
-
-  // 수정 / 삭제 버튼 이벤트 붙이기
-  document.querySelectorAll('.deleteBtn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const li = this.closest('li');
-      const postId = Number(li.dataset.id);
-      deletePost(postId);
-    });
-  });
-
-  document.querySelectorAll('.editBtn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const li = this.closest('li');
-      const postId = Number(li.dataset.id);
-      showEditForm(li, postId);
-    });
-  });
-}
-
-function deletePost(postId) {
-  if (!confirm('정말 삭제하시겠습니까?')) return;
-
-  const postsJSON = localStorage.getItem('posts') || '[]';
-  const posts = JSON.parse(postsJSON);
-
-  const newPosts = posts.filter(p => p.id !== postId);
-  localStorage.setItem('posts', JSON.stringify(newPosts));
-  loadPosts(document.getElementById('searchInput').value.trim().toLowerCase());
-}
-
-function showEditForm(liElement, postId) {
-  // liElement 내부에 편집용 입력창을 삽입
-  const postsJSON = localStorage.getItem('posts') || '[]';
-  const posts = JSON.parse(postsJSON);
-  const post = posts.find(p => p.id === postId);
-  if (!post) return;
-
-  // 원래 내용 숨기기
-  liElement.innerHTML = `
-    제목: <input type="text" class="editTitle" value="${escapeHtml(post.title)}"><br>
-    내용: <textarea class="editContent">${escapeHtml(post.content)}</textarea><br>
-    <button class="saveEditBtn">저장</button>
-    <button class="cancelEditBtn">취소</button>
-  `;
-
-  // 저장 버튼
-  liElement.querySelector('.saveEditBtn').addEventListener('click', function() {
-    const newTitle = liElement.querySelector('.editTitle').value.trim();
-    const newContent = liElement.querySelector('.editContent').value.trim();
-    if (!newTitle || !newContent) {
-      alert('제목과 내용을 모두 입력하세요.');
-      return;
-    }
-
-    // 저장
-    post.title = newTitle;
-    post.content = newContent;
-    post.date = new Date().toISOString();  // 수정 시간 반영하느냐는 선택
-    
-    localStorage.setItem('posts', JSON.stringify(posts));
-    loadPosts(document.getElementById('searchInput').value.trim().toLowerCase());
-  });
-
-  // 취소 버튼
-  liElement.querySelector('.cancelEditBtn').addEventListener('click', function() {
-    loadPosts(document.getElementById('searchInput').value.trim().toLowerCase());
-  });
-}
-
-function renderPagination(totalPages) {
-  const pagSection = document.getElementById('paginationSection');
-  pagSection.innerHTML = '';
-
-  if (totalPages <= 1) return;
-
-  const prevBtn = document.createElement('button');
-  prevBtn.innerText = '이전';
-  prevBtn.disabled = (currentPage === 1);
-  prevBtn.addEventListener('click', function() {
-    currentPage--;
-    loadPosts(document.getElementById('searchInput').value.trim().toLowerCase());
-  });
-  pagSection.appendChild(prevBtn);
-
-  for (let i = 1; i <= totalPages; i++) {
-    const btn = document.createElement('button');
-    btn.innerText = i;
-    if (i === currentPage) {
-      btn.disabled = true;
-      btn.classList.add('activePage');
-    }
-    btn.addEventListener('click', function() {
-      currentPage = i;
-      loadPosts(document.getElementById('searchInput').value.trim().toLowerCase());
-    });
-    pagSection.appendChild(btn);
-  }
-
-  const nextBtn = document.createElement('button');
-  nextBtn.innerText = '다음';
-  nextBtn.disabled = (currentPage === totalPages);
-  nextBtn.addEventListener('click', function() {
-    currentPage++;
-    loadPosts(document.getElementById('searchInput').value.trim().toLowerCase());
-  });
-  pagSection.appendChild(nextBtn);
-}
-
-// XSS 방지용 단순 escape 함수
-function escapeHtml(string) {
-  const div = document.createElement('div');
-  div.innerText = string;
-  return div.innerHTML;
-}
+    <!-- 페이지네이션 -->
+    <div class="pagination">
+      <button disabled>이전</button>
+      <button class="active">1</button>
+      <button>2</button>
+      <button>3</button>
+      <button>다음</button>
+    </div>
+  </div>
+</body>
+</html>
