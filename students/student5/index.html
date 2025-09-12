@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>성적 그래프 + 등급 계산기</title>
+  <title>성적 그래프 (절대평가)</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
@@ -22,7 +22,7 @@
   </style>
 </head>
 <body>
-  <h1>📊 성적 그래프 + 등급 계산기</h1>
+  <h1>📊 성적 그래프 (절대평가)</h1>
 
   <div class="subject">
     <h2>국어 성적</h2>
@@ -50,35 +50,30 @@
   <script>
     let charts = {};
 
-    // 등급컷 기준 (누적 비율)
-    const gradeCutoffs = [
-      { grade: 1, cutoff: 0.10 },
-      { grade: 2, cutoff: 0.24 },
-      { grade: 3, cutoff: 0.32 },
-      { grade: 4, cutoff: 0.56 },
-      { grade: 5, cutoff: 1.00 } // 나머지 전부
-    ];
-
-    function getGrades(scores) {
-      const sorted = [...scores].sort((a, b) => b - a); // 높은 점수 순
-      const total = scores.length;
-      return scores.map(score => {
-        const rank = sorted.indexOf(score) + 1;
-        const percentile = (rank - 1) / total; // 0~1
-        for (let g of gradeCutoffs) {
-          if (percentile < g.cutoff) {
-            return g.grade;
-          }
-        }
-        return 5;
-      });
+    // 절대평가 등급 기준
+    function getAbsoluteGrade(score) {
+      if (score >= 90) return 1;
+      if (score >= 80) return 2;
+      if (score >= 70) return 3;
+      if (score >= 60) return 4;
+      return 5;
     }
 
-    function drawChart(subject, inputId, canvasId, color, gradeOutputId) {
+    // 등급별 색상
+    const gradeColors = {
+      1: "rgba(255, 99, 132, 1)",    // 빨강
+      2: "rgba(255, 159, 64, 1)",    // 주황
+      3: "rgba(255, 205, 86, 1)",    // 노랑
+      4: "rgba(75, 192, 192, 1)",    // 초록
+      5: "rgba(201, 203, 207, 1)"    // 회색
+    };
+
+    function drawChart(subject, inputId, canvasId, gradeOutputId) {
       const rawInput = document.getElementById(inputId).value;
       const scores = rawInput.split(",").map(s => parseFloat(s.trim())).filter(s => !isNaN(s));
       const labels = scores.map((_, i) => `시험 ${i + 1}`);
-      const grades = getGrades(scores);
+      const grades = scores.map(getAbsoluteGrade);
+      const pointColors = grades.map(g => gradeColors[g]);
 
       const ctx = document.getElementById(canvasId).getContext('2d');
       if (charts[canvasId]) {
@@ -92,12 +87,14 @@
           datasets: [{
             label: `${subject} 성적`,
             data: scores,
-            borderColor: color,
-            backgroundColor: color + '55',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.3)',
             tension: 0.3,
             fill: false,
-            pointRadius: 5,
-            pointHoverRadius: 7
+            pointBackgroundColor: pointColors,
+            pointBorderColor: pointColors,
+            pointRadius: 6,
+            pointHoverRadius: 8
           }]
         },
         options: {
@@ -106,8 +103,8 @@
             tooltip: {
               callbacks: {
                 label: function(context) {
-                  const index = context.dataIndex;
-                  return `점수: ${scores[index]}점, 등급: ${grades[index]}등급`;
+                  const i = context.dataIndex;
+                  return `점수: ${scores[i]}점, 등급: ${grades[i]}등급`;
                 }
               }
             }
@@ -121,4 +118,15 @@
         }
       });
 
-      // 등급 출력
+      const gradeText = grades.map((g, i) => `시험 ${i + 1}: ${g}등급`).join(" / ");
+      document.getElementById(gradeOutputId).innerText = `등급 결과: ${gradeText}`;
+    }
+
+    function drawAllCharts() {
+      drawChart("국어", "koreanInput", "koreanChart", "koreanGrades");
+      drawChart("영어", "englishInput", "englishChart", "englishGrades");
+      drawChart("수학", "mathInput", "mathChart", "mathGrades");
+    }
+  </script>
+</body>
+</html>
