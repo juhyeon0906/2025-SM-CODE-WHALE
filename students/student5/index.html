@@ -1,121 +1,88 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>기본 웹사이트</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset='UTF-8'>
+  <title> 콩이가 좋아
+  </title>
+  <style>
+    body{background-color: #A4E4F7;}
+    .center-image {
+      display:block;
+      margin: 40px auto;
+      max-width: 90%;
+      width: 800px;
+      height: auto;
+      box-sizing: border-box;
+      z-index: 1000; }
+    .small-images-container {
+      display: flex;
+      justify-content: space-between;
+      max-width: 800px;
+      width: 90%;
+      margin: 20px auto 40px;
+      gap: 20px;
+    }
+    .small-images-container img {
+      width: 48%; /
+      height: auto;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    .link-block{
+      font-family:'Arial',sans-serif;
+      font-size:25px;
+      display:block;
+      color:#5B78A4;
+      width:600px;
+      border-radius:20px;
+      padding: 20px 40px;
+      text-decoration: none;
+      position: fixed;
+    }
+    #link-block-1 {
+      background-color: white; 
+      border: 2px solid red;
+      bottom: 110px;
+      right:20px;
+    }
+    @keyframes colorChange {
+      0%   { background-color: red;}
+      50%  { background-color: yellow; }
+      100% { background-color: white; }
+    }
+
+    #link-block-2 {
+      animation: colorChange 3s infinite;
+      border: 2px solid red;
+      bottom: 40px;
+      right:20px;
+    }
+  </style>
 </head>
 <body>
-  <<<<<<< patch-13
-    <!-- 헤더 -->
-    <header>
-        <h1>웹사이트 제목</h1>
-        <p>여기는 웹사이트 설명입니다.</p>
-    </header>
+  <h1 style="color:white;text-align:center;
+    font-family:'Arial',sans-serif;
+    font-size:90px">  Welcome to my home! </h1>
+  <a href= "https://www.youtube.com/" class="link-block" id="link-block-1">  유튜브 바로 가기 </a>
+  <a href= "https://www.catpang.com/" class="link-block"  id="link-block-2">  고양이를 위한 합리적 선택! </a>
+  <img
+  src="https://cdn.cashfeed.co.kr/post/8536893/thumbnail/391e7df4cd.jpeg"
+  alt="cute kitty"
+  class="center-image"
+  />
+  <div class="small-images-container">
+    <img
+      src="https://pixnio.com/free-images/2018/06/28/2018-06-28-07-01-29.jpg"
+      alt="cute kitty left"
+    />
+    <img
+      src="https://th.bing.com/th/id/R.6712875cebc7143a4e4b4616f5188ca8?rik=FFeN7jhxc%2b4TNw&riu=http%3a%2f%2ffile.daesoon.org%2fwebzine%2f307%2f202212191656_Daesoon_263_%eb%ac%b8%ed%99%94%ec%82%b0%ec%b1%85_%ec%a0%84%ea%b2%bd+%ec%86%8d+%eb%8f%99%eb%ac%bc+%ea%b3%a0%ec%96%91.jpg&ehk=%2btlYYt2k2CnoFfezMLtyzrNaovQHb3GXKP%2b8YxMebU0%3d&risl=&pid=ImgRaw&r=0"
+      alt="cute kitty right"
+    />
+  </div>
+  <p style="text-align:center; font-family:'Arial', sans-serif; font-size:20px; color:#333;">
+    고양이 이미지
+  </p>
 
-    <!-- 네비게이션 바 -->
-    <nav>
-        <ul>
-            <li><a href="#">홈</a></li>
-            <li><a href="#">서비스</a></li>
-            <li><a href="#">소개</a></li>
-            <li><a href="#">연락처</a></li>
-        </ul>
-    </nav>
-
-    <!-- 본문 -->
-    <section class="content">
-        <h2>본문 제목</h2>
-        <p>여기는 본문 내용입니다. 여기에 웹사이트의 주된 정보를 넣을 수 있습니다.</p>
-    </section>
-
-    <!-- 푸터 -->
-    <footer>
-        <p>© 2025 웹사이트 이름. 모든 권리 보유.</p>
-    </footer>
-=======
-  <h1>1518 임정민</h1>
-  <p>※★team whale 파이팅★※</p>
 </body>
 </html>
-CSS 코드 (styles.css)
-css
-복사
-/* 기본 스타일 초기화 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* 전체 배경 색상 */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-}
-
-/* 헤더 스타일 */
-header {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 20px;
-}
-
-header h1 {
-    font-size: 2.5rem;
-}
-
-header p {
-    font-size: 1rem;
-}
-
-/* 네비게이션 바 스타일 */
-nav {
-    background-color: #444;
-    padding: 10px;
-    text-align: center;
-}
-
-nav ul {
-    list-style: none;
-}
-
-nav ul li {
-    display: inline;
-    margin: 0 15px;
-}
-
-nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.1rem;
-}
-
-/* 본문 스타일 */
-.content {
-    padding: 20px;
-    text-align: center;
-}
-
-.content h2 {
-    font-size: 2rem;
-    margin-bottom: 15px;
-}
-
-.content p {
-    font-size: 1.2rem;
-    line-height: 1.6;
-}
-
-/* 푸터 스타일 */
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
