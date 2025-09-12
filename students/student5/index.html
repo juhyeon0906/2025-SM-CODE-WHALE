@@ -1,88 +1,157 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta charset='UTF-8'>
-  <title> 콩이가 좋아
-  </title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>학사일정 달력</title>
   <style>
-    body{background-color: #A4E4F7;}
-    .center-image {
-      display:block;
-      margin: 40px auto;
-      max-width: 90%;
-      width: 800px;
-      height: auto;
-      box-sizing: border-box;
-      z-index: 1000; }
-    .small-images-container {
-      display: flex;
-      justify-content: space-between;
-      max-width: 800px;
-      width: 90%;
-      margin: 20px auto 40px;
-      gap: 20px;
-    }
-    .small-images-container img {
-      width: 48%; /
-      height: auto;
-      border-radius: 15px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    .link-block{
-      font-family:'Arial',sans-serif;
-      font-size:25px;
-      display:block;
-      color:#5B78A4;
-      width:600px;
-      border-radius:20px;
-      padding: 20px 40px;
-      text-decoration: none;
-      position: fixed;
-    }
-    #link-block-1 {
-      background-color: white; 
-      border: 2px solid red;
-      bottom: 110px;
-      right:20px;
-    }
-    @keyframes colorChange {
-      0%   { background-color: red;}
-      50%  { background-color: yellow; }
-      100% { background-color: white; }
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
     }
 
-    #link-block-2 {
-      animation: colorChange 3s infinite;
-      border: 2px solid red;
-      bottom: 40px;
-      right:20px;
+    h1 {
+      margin-top: 20px;
+    }
+
+    .calendar {
+      width: 90%;
+      max-width: 800px;
+      margin: 30px auto;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .calendar-header button {
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      margin-top: 20px;
+    }
+
+    .day, .date {
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .day {
+      font-weight: bold;
+      background-color: #eee;
+    }
+
+    .date {
+      height: 80px;
+      position: relative;
+    }
+
+    .event {
+      background-color: #ffcc00;
+      color: #000;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-size: 12px;
+      position: absolute;
+      bottom: 5px;
+      left: 5px;
+      right: 5px;
     }
   </style>
 </head>
 <body>
-  <h1 style="color:white;text-align:center;
-    font-family:'Arial',sans-serif;
-    font-size:90px">  Welcome to my home! </h1>
-  <a href= "https://www.youtube.com/" class="link-block" id="link-block-1">  유튜브 바로 가기 </a>
-  <a href= "https://www.catpang.com/" class="link-block"  id="link-block-2">  고양이를 위한 합리적 선택! </a>
-  <img
-  src="https://cdn.cashfeed.co.kr/post/8536893/thumbnail/391e7df4cd.jpeg"
-  alt="cute kitty"
-  class="center-image"
-  />
-  <div class="small-images-container">
-    <img
-      src="https://pixnio.com/free-images/2018/06/28/2018-06-28-07-01-29.jpg"
-      alt="cute kitty left"
-    />
-    <img
-      src="https://th.bing.com/th/id/R.6712875cebc7143a4e4b4616f5188ca8?rik=FFeN7jhxc%2b4TNw&riu=http%3a%2f%2ffile.daesoon.org%2fwebzine%2f307%2f202212191656_Daesoon_263_%eb%ac%b8%ed%99%94%ec%82%b0%ec%b1%85_%ec%a0%84%ea%b2%bd+%ec%86%8d+%eb%8f%99%eb%ac%bc+%ea%b3%a0%ec%96%91.jpg&ehk=%2btlYYt2k2CnoFfezMLtyzrNaovQHb3GXKP%2b8YxMebU0%3d&risl=&pid=ImgRaw&r=0"
-      alt="cute kitty right"
-    />
+  <h1>📅 학사일정 달력</h1>
+  <div class="calendar">
+    <div class="calendar-header">
+      <button onclick="changeMonth(-1)">이전 달</button>
+      <h2 id="monthYear"></h2>
+      <button onclick="changeMonth(1)">다음 달</button>
+    </div>
+    <div class="calendar-grid" id="calendarGrid">
+    </div>
   </div>
-  <p style="text-align:center; font-family:'Arial', sans-serif; font-size:20px; color:#333;">
-    고양이 이미지
-  </p>
 
+  <script>
+    const calendarGrid = document.getElementById('calendarGrid');
+    const monthYear = document.getElementById('monthYear');
+    let currentDate = new Date();
+
+    const events = {
+      "2025-09-03": "모의평가",
+      "2025-09-12": "동아리활동",
+      "2025-09-19": "현장체험학습",
+      "2025-09-29": "수학여행",
+      "2025-09-30": "수학여행",
+      "2025-10-01": "수학여행",
+      "2025-10-02": "수학여행",
+      "2025-10-03": "개천절",
+      "2025-10-05": "추석연휴",
+      "2025-10-06": "추석연휴",
+      "2025-10-07": "추석연휴",
+      "2025-10-08": "대체휴일",
+      "2025-10-09": "한글날",
+    };
+
+    function renderCalendar(date) {
+      calendarGrid.innerHTML = "";
+
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const firstDay = new Date(year, month, 1).getDay();
+      const lastDate = new Date(year, month + 1, 0).getDate();
+
+      monthYear.textContent = `${year}년 ${month + 1}월`;
+
+      const days = ['일', '월', '화', '수', '목', '금', '토'];
+      for (let day of days) {
+        const dayElem = document.createElement('div');
+        dayElem.className = 'day';
+        dayElem.textContent = day;
+        calendarGrid.appendChild(dayElem);
+      }
+
+      for (let i = 0; i < firstDay; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'date';
+        calendarGrid.appendChild(emptyCell);
+      }
+
+      for (let i = 1; i <= lastDate; i++) {
+        const dateCell = document.createElement('div');
+        dateCell.className = 'date';
+        const fullDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+
+        dateCell.textContent = i;
+
+        if (events[fullDate]) {
+          const eventDiv = document.createElement('div');
+          eventDiv.className = 'event';
+          eventDiv.textContent = events[fullDate];
+          dateCell.appendChild(eventDiv);
+        }
+
+        calendarGrid.appendChild(dateCell);
+      }
+    }
+
+    function changeMonth(offset) {
+      currentDate.setMonth(currentDate.getMonth() + offset);
+      renderCalendar(currentDate);
+    }
+
+    renderCalendar(currentDate);
+  </script>
 </body>
 </html>
