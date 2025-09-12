@@ -57,3 +57,231 @@
   <script src="script.js"></script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>월별 급식 안내</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 40px;
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      max-width: 600px;
+      margin: 20px auto;
+    }
+
+    .day {
+      padding: 15px;
+      background-color: #f0f0f0;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .day:hover {
+      background-color: #d0eaff;
+    }
+
+    .meal-info {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .meal-box {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      display: inline-block;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>9월 급식 안내</h1>
+
+  <div class="calendar" id="calendar"></div>
+
+  <div class="meal-info" id="mealInfo">
+    <h2>날짜를 선택하세요</h2>
+  </div>
+
+  <script>
+    const calendarElement = document.getElementById("calendar");
+    const mealInfo = document.getElementById("mealInfo");
+
+    // 9월 달력 그리기 (1~30일)
+    const year = 2025;
+    const month = 8; // JS에서 9월은 8 (0부터 시작)
+
+    function renderCalendar() {
+      for (let day = 1; day <= 30; day++) {
+        const dateStr = `${year}-09-${day.toString().padStart(2, '0')}`;
+        const dayElement = document.createElement("div");
+        dayElement.className = "day";
+        dayElement.textContent = day;
+        dayElement.onclick = () => showMeal(dateStr);
+        calendarElement.appendChild(dayElement);
+      }
+    }
+
+    function showMeal(dateStr) {
+      const meals = mealData[dateStr];
+      mealInfo.innerHTML = `<h2>${dateStr} 급식</h2>`;
+      if (meals) {
+        const mealList = meals.map(item => `<li>${item}</li>`).join('');
+        mealInfo.innerHTML += `<div class="meal-box"><ul>${mealList}</ul></div>`;
+      } else {
+        mealInfo.innerHTML += `<p>등록된 급식 정보가 없습니다.</p>`;
+      }
+    }
+
+    renderCalendar();
+  </script>
+</body>
+</html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>성적 관리 시스템</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      margin: 20px auto;
+      max-width: 500px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input, select, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+      font-size: 16px;
+    }
+
+    table {
+      width: 90%;
+      margin: 30px auto;
+      border-collapse: collapse;
+      background-color: white;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .average {
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+  <h1>성적 관리 시스템</h1>
+
+  <form id="gradeForm">
+    <input type="text" id="studentName" placeholder="학생 이름" required />
+    <select id="subject" required>
+      <option value="">과목 선택</option>
+      <option value="국어">국어</option>
+      <option value="수학">수학</option>
+      <option value="영어">영어</option>
+      <option value="과학">과학</option>
+      <option value="사회">사회</option>
+    </select>
+    <input type="number" id="score" placeholder="점수 (0~100)" min="0" max="100" required />
+    <button type="submit">성적 등록</button>
+  </form>
+
+  <div class="average" id="averageScore">평균 점수: -</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>이름</th>
+        <th>과목</th>
+        <th>점수</th>
+      </tr>
+    </thead>
+    <tbody id="gradeTableBody"></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('gradeForm');
+    const tableBody = document.getElementById('gradeTableBody');
+    const averageDisplay = document.getElementById('averageScore');
+
+    const grades = [];
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('studentName').value.trim();
+      const subject = document.getElementById('subject').value;
+      const score = parseInt(document.getElementById('score').value);
+
+      if (!name || !subject || isNaN(score)) {
+        alert('모든 항목을 올바르게 입력하세요.');
+        return;
+      }
+
+      grades.push({ name, subject, score });
+      updateTable();
+      updateAverage();
+
+      form.reset();
+    });
+
+    function updateTable() {
+      tableBody.innerHTML = '';
+      grades.forEach(grade => {
+        const row = `<tr>
+          <td>${grade.name}</td>
+          <td>${grade.subject}</td>
+          <td>${grade.score}</td>
+        </tr>`;
+        tableBody.innerHTML += row;
+      });
+    }
+
+    function updateAverage() {
+      if (grades.length === 0) {
+        averageDisplay.textContent = '평균 점수: -';
+        return;
+      }
+
+      const total = grades.reduce((sum, g) => sum + g.score, 0);
+      const avg = (total / grades.length).toFixed(2);
+      averageDisplay.textContent = `평균 점수: ${avg}`;
+    }
+  </script>
+
+</body>
+</html>
