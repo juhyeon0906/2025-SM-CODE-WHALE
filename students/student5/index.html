@@ -1,89 +1,91 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta charset='UTF-8'>
-  <title> 콩이가 좋아
-  </title>
+  <meta charset="UTF-8">
+  <title>성적 그래프</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body{background-color: #A4E4F7;}
-    .center-image {
-      display:block;
-      margin: 40px auto;
-      max-width: 90%;
-      height: auto;
-      box-sizing: border-box;
-      z-index: 1000; }
-    .small-images-container {
-      display: flex;
-      justify-content: space-between;
-      max-width: 800px;
-      width: 90%;
-      margin: 20px auto 40px;
-      gap: 20px;
+    body {
+      font-family: sans-serif;
+      padding: 20px;
     }
-    .small-images-container img {
-      width: 48%;
-      height: auto;
-      border-radius: 15px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    .subject {
+      margin-bottom: 40px;
     }
-    .link-block{
-      font-family:'Arial',sans-serif;
-      font-size:25px;
-      display:block;
-      color:#5B78A4;
-      width:600px;
-      border-radius:20px;
-      padding: 20px 40px;
-      text-decoration: none;
-      position: fixed;
-      max-width: 90vw;
-      right: 20px;
-      z-index: 2000;
-    }
-    #link-block-1 {
-      background-color: white; 
-      border: 2px solid red;
-      bottom: 110px;
-    }
-    @keyframes colorChange {
-      0%   { background-color: red;}
-      50%  { background-color: yellow; }
-      100% { background-color: white; }
-    }
-
-    #link-block-2 {
-      animation: colorChange 3s infinite;
-      border: 2px solid red;
-      bottom: 40px;
+    canvas {
+      max-width: 600px;
     }
   </style>
 </head>
 <body>
-  <h1 style="color:white;text-align:center;
-    font-family:'Arial',sans-serif;
-    font-size:90px">  Welcome to my home! </h1>
-  <a href= "https://www.youtube.com/" class="link-block" id="link-block-1">  유튜브 바로 가기 </a>
-  <a href= "https://www.catpang.com/" class="link-block"  id="link-block-2">  고양이를 위한 합리적 선택! </a>
-  <img
-  src="https://cdn.cashfeed.co.kr/post/8536893/thumbnail/391e7df4cd.jpeg"
-  alt="cute kitty"
-  class="center-image"
-  />
-  <div class="small-images-container">
-    <img
-      src="https://pixnio.com/free-images/2018/06/28/2018-06-28-07-01-29.jpg"
-      alt="cute kitty left"
-    />
-    <img
-      src="https://th.bing.com/th/id/R.6712875cebc7143a4e4b4616f5188ca8?rik=FFeN7jhxc%2b4TNw&riu=http%3a%2f%2ffile.daesoon.org%2fwebzine%2f307%2f202212191656_Daesoon_263_%eb%ac%b8%ed%99%94%ec%82%b0%ec%b1%85_%ec%a0%84%ea%b2%bd+%ec%86%8d+%eb%8f%99%eb%ac%bc+%ea%b3%a0%ec%96%91.jpg&ehk=%2btlYYt2k2CnoFfezMLtyzrNaovQHb3GXKP%2b8YxMebU0%3d&risl=&pid=ImgRaw&r=0"
-      alt="cute kitty right"
-    />
-  </div>
-  <p style="text-align:center; font-family:'Arial', sans-serif; font-size:20px; color:#333;">
-    고양이 이미지
-  </p>
+  <h1>📊 성적 그래프 열람기</h1>
 
+  <div class="subject">
+    <h2>국어 성적</h2>
+    <input type="text" id="koreanInput" placeholder="예: 85, 90, 92, 88">
+    <canvas id="koreanChart"></canvas>
+  </div>
+
+  <div class="subject">
+    <h2>영어 성적</h2>
+    <input type="text" id="englishInput" placeholder="예: 78, 82, 85, 80">
+    <canvas id="englishChart"></canvas>
+  </div>
+
+  <div class="subject">
+    <h2>수학 성적</h2>
+    <input type="text" id="mathInput" placeholder="예: 92, 89, 95, 98">
+    <canvas id="mathChart"></canvas>
+  </div>
+
+  <button onclick="drawAllCharts()">그래프 그리기</button>
+
+  <script>
+    let charts = {};
+
+    function drawChart(subject, inputId, canvasId, color) {
+      const rawInput = document.getElementById(inputId).value;
+      const scores = rawInput.split(",").map(s => parseFloat(s.trim())).filter(s => !isNaN(s));
+
+      const labels = scores.map((_, i) => `시험 ${i + 1}`);
+
+      const ctx = document.getElementById(canvasId).getContext('2d');
+
+      // 기존 그래프 제거 (중복 방지)
+      if (charts[canvasId]) {
+        charts[canvasId].destroy();
+      }
+
+      charts[canvasId] = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: `${subject} 성적`,
+            data: scores,
+            borderColor: color,
+            backgroundColor: color + '55',
+            tension: 0.3,
+            fill: false
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100
+            }
+          }
+        }
+      });
+    }
+
+    function drawAllCharts() {
+      drawChart("국어", "koreanInput", "koreanChart", "rgba(255,99,132,1)");
+      drawChart("영어", "englishInput", "englishChart", "rgba(54,162,235,1)");
+      drawChart("수학", "mathInput", "mathChart", "rgba(75,192,192,1)");
+    }
+  </script>
 </body>
 </html>
