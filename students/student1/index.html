@@ -8,7 +8,7 @@
     * { box-sizing: border-box; font-family: "Noto Sans KR", sans-serif; }
     body { margin: 0; background: #f5f8ff; color: #333; }
 
-    /* ===== 상단 네비게이션 ===== */
+    /* 상단 네비게이션 */
     header {
       background: #ffffff;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -26,7 +26,7 @@
     }
     nav a:hover { color: #1f57c9; }
 
-    /* ===== 로그인 영역 ===== */
+    /* 로그인 영역 */
     .login-wrapper {
       display: flex;
       flex-direction: column;
@@ -53,7 +53,7 @@
       color: #777;
       margin-bottom: 24px;
     }
-    input, select {
+    input {
       width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
@@ -62,7 +62,7 @@
       outline: none;
       transition: 0.2s;
     }
-    input:focus, select:focus {
+    input:focus {
       border-color: #1f57c9;
       box-shadow: 0 0 0 2px rgba(31,87,201,0.2);
     }
@@ -79,7 +79,7 @@
     }
     button:hover { background: #1745a9; transform: translateY(-2px); }
 
-    /* ===== 메인 페이지 ===== */
+    /* 메인 페이지 */
     .main-page { display: none; background: #f5f8ff; min-height: 100vh; }
     .hero {
       background: #eaf1ff;
@@ -130,24 +130,6 @@
     <div class="login-box">
       <h1>창원성민여자고등학교</h1>
       <p>포털 로그인</p>
-
-      <select id="grade">
-        <option value="">학년 선택</option>
-        <option value="1">1학년</option>
-        <option value="2">2학년</option>
-        <option value="3">3학년</option>
-      </select>
-
-      <select id="classNum">
-        <option value="">반 선택</option>
-        <option value="1">1반</option>
-        <option value="2">2반</option>
-        <option value="3">3반</option>
-        <option value="4">4반</option>
-        <option value="5">5반</option>
-        <option value="6">6반</option>
-        <option value="7">7반</option>
-      </select>
 
       <input type="text" id="studentId" placeholder="아이디 (예: 10101)" />
       <input type="password" id="studentPw" placeholder="비밀번호" />
@@ -202,24 +184,22 @@
   </div>
 
   <script>
-    // 가짜 계정 데이터
+    // 임시 계정 데이터
     const students = [];
     for (let g = 1; g <= 3; g++) {
       for (let c = 1; c <= 7; c++) {
         for (let n = 1; n <= 5; n++) {
           const id = `${g}${String(c).padStart(2, "0")}${String(n).padStart(2, "0")}`;
-          students.push({ id, pw: "1234", grade: g, classNum: c });
+          students.push({ id, pw: "1234" });
         }
       }
     }
 
     function login() {
-      const grade = document.getElementById("grade").value;
-      const classNum = document.getElementById("classNum").value;
       const id = document.getElementById("studentId").value.trim();
       const pw = document.getElementById("studentPw").value.trim();
 
-      if (!grade || !classNum || !id || !pw) return alert("모든 항목을 입력하세요.");
+      if (!id || !pw) return alert("아이디와 비밀번호를 모두 입력하세요.");
 
       const student = students.find(s => s.id === id && s.pw === pw);
       if (!student) {
@@ -228,10 +208,10 @@
       }
 
       localStorage.setItem("currentStudent", JSON.stringify(student));
-      showMain(student);
+      showMain();
     }
 
-    function showMain(student) {
+    function showMain() {
       document.getElementById("loginPage").style.display = "none";
       document.getElementById("mainPage").style.display = "block";
     }
@@ -244,7 +224,7 @@
 
     window.onload = () => {
       const saved = localStorage.getItem("currentStudent");
-      if (saved) showMain(JSON.parse(saved));
+      if (saved) showMain();
     };
   </script>
 </body>
