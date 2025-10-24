@@ -6,7 +6,25 @@
   <title>창원성민여자고등학교 포털</title>
   <style>
     * { box-sizing: border-box; font-family: "Noto Sans KR", sans-serif; }
-    body { margin: 0; background: #f3f8ff; color: #333; }
+    body { margin: 0; background: #f5f8ff; color: #333; }
+
+    /* ===== 상단 네비게이션 ===== */
+    header {
+      background: #ffffff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+      font-weight: bold;
+    }
+    nav a {
+      margin: 0 20px;
+      color: #222;
+      text-decoration: none;
+      font-size: 15px;
+      transition: 0.2s;
+    }
+    nav a:hover { color: #1f57c9; }
 
     /* ===== 로그인 영역 ===== */
     .login-wrapper {
@@ -24,18 +42,18 @@
       box-shadow: 0 6px 20px rgba(0,0,0,0.08);
       padding: 40px;
       text-align: center;
-      border-top: 6px solid #2b6ef2;
+      border-top: 6px solid #1f57c9;
     }
     .login-box h1 {
       font-size: 22px;
-      color: #2b6ef2;
+      color: #1f57c9;
       margin-bottom: 6px;
     }
     .login-box p {
       color: #777;
       margin-bottom: 24px;
     }
-    input {
+    input, select {
       width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
@@ -44,20 +62,13 @@
       outline: none;
       transition: 0.2s;
     }
-    input:focus {
-      border-color: #2b6ef2;
-      box-shadow: 0 0 0 2px rgba(43,110,242,0.2);
-    }
-    select {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      margin-bottom: 12px;
+    input:focus, select:focus {
+      border-color: #1f57c9;
+      box-shadow: 0 0 0 2px rgba(31,87,201,0.2);
     }
     button {
       width: 100%;
-      background: #2b6ef2;
+      background: #1f57c9;
       color: white;
       border: none;
       border-radius: 8px;
@@ -66,70 +77,55 @@
       cursor: pointer;
       transition: 0.2s;
     }
-    button:hover { background: #1f57c9; transform: translateY(-2px); }
-    .footer {
-      margin-top: 16px;
-      font-size: 13px;
-      color: #888;
-    }
+    button:hover { background: #1745a9; transform: translateY(-2px); }
 
     /* ===== 메인 페이지 ===== */
-    .main-page {
-      display: none;
-      min-height: 100vh;
-      background: #f5f7fb;
+    .main-page { display: none; background: #f5f8ff; min-height: 100vh; }
+    .hero {
+      background: #eaf1ff;
+      text-align: center;
+      padding: 60px 20px;
     }
-    header {
-      background: white;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    header h2 {
-      color: #2b6ef2;
-      margin: 0;
-    }
-    header button {
-      background: #2b6ef2;
-      border: none;
-      color: white;
-      padding: 6px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    header button:hover { background: #1f57c9; }
-    main {
-      padding: 40px;
-    }
-    .card-grid {
+    .hero h2 { font-size: 28px; margin: 0; color: #333; }
+    .hero span { color: #1f57c9; font-weight: bold; }
+
+    .menu-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
+      gap: 24px;
+      padding: 60px 10%;
     }
-    .card {
+    .menu-card {
       background: white;
-      border-radius: 16px;
+      border-radius: 14px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      padding: 20px;
       text-align: center;
+      padding: 30px;
       cursor: pointer;
       transition: 0.2s;
     }
-    .card:hover { transform: translateY(-5px); box-shadow: 0 6px 14px rgba(0,0,0,0.08); }
+    .menu-card:hover { transform: translateY(-5px); box-shadow: 0 6px 14px rgba(0,0,0,0.08); }
+    .menu-card img {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 12px;
+    }
+    .menu-card h3 { margin: 10px 0 6px; color: #1f57c9; }
+    .menu-card p { color: #555; font-size: 14px; }
+
     footer {
+      background: white;
       text-align: center;
       padding: 20px;
       color: #999;
       font-size: 13px;
+      border-top: 1px solid #eee;
     }
   </style>
 </head>
 <body>
 
-  <!-- 로그인 화면 -->
+  <!-- 로그인 페이지 -->
   <div class="login-wrapper" id="loginPage">
     <div class="login-box">
       <h1>창원성민여자고등학교</h1>
@@ -157,37 +153,56 @@
       <input type="password" id="studentPw" placeholder="비밀번호" />
 
       <button onclick="login()">로그인</button>
-
-      <div class="footer">© 2025 창원성민여자고등학교 포털</div>
     </div>
   </div>
 
   <!-- 메인 페이지 -->
   <div class="main-page" id="mainPage">
     <header>
-      <h2>창원성민여자고 포털</h2>
-      <div>
-        <span id="studentInfo" style="margin-right:10px; color:#555;"></span>
-        <button onclick="logout()">로그아웃</button>
-      </div>
+      <nav>
+        <a href="#">홈</a>
+        <a href="#">공지사항</a>
+        <a href="#">학사정보</a>
+        <a href="#">학교생활</a>
+        <a href="#" onclick="logout()">로그아웃</a>
+      </nav>
     </header>
 
-    <main>
-      <h3 style="margin-bottom:20px;">📘 학교 주요 메뉴</h3>
-      <div class="card-grid">
-        <div class="card" onclick="alert('공지사항 페이지로 이동 예정!')">📢 공지사항</div>
-        <div class="card" onclick="alert('성적조회 페이지로 이동 예정!')">📊 성적조회</div>
-        <div class="card" onclick="alert('급식표 페이지로 이동 예정!')">🍱 급식표</div>
-        <div class="card" onclick="alert('시간표 페이지로 이동 예정!')">⏰ 시간표</div>
-        <div class="card" onclick="alert('상담신청 페이지로 이동 예정!')">💬 상담신청</div>
-      </div>
-    </main>
+    <div class="hero">
+      <h2>학교를 보면 <span>아이들의 미래</span>가 보입니다</h2>
+      <p style="color:#555; margin-top:8px;">창원성민여자고등학교 포털에 오신 것을 환영합니다.</p>
+    </div>
 
-    <footer>© 2025 창원성민여자고등학교 | 제작 도움: <a href="https://gptonline.ai/ko/" target="_blank">GPT Online</a></footer>
+    <section class="menu-container">
+      <div class="menu-card" onclick="alert('학사일정 페이지로 이동 예정!')">
+        <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png" alt="학사일정">
+        <h3>학사일정</h3>
+        <p>학교의 주요 학사 일정을 확인하세요.</p>
+      </div>
+      <div class="menu-card" onclick="alert('급식 페이지로 이동 예정!')">
+        <img src="https://cdn-icons-png.flaticon.com/512/3480/3480521.png" alt="급식">
+        <h3>오늘의 급식</h3>
+        <p>오늘의 맛있는 급식 메뉴를 확인하세요.</p>
+      </div>
+      <div class="menu-card" onclick="alert('성적조회 페이지로 이동 예정!')">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="성적조회">
+        <h3>성적조회</h3>
+        <p>중간·기말 성적 및 누적 성적을 확인합니다.</p>
+      </div>
+      <div class="menu-card" onclick="alert('시간표 페이지로 이동 예정!')">
+        <img src="https://cdn-icons-png.flaticon.com/512/1688/1688450.png" alt="시간표">
+        <h3>시간표</h3>
+        <p>나의 오늘 수업과 과목을 한눈에 확인하세요.</p>
+      </div>
+    </section>
+
+    <footer>
+      © 2025 창원성민여자고등학교 | All Rights Reserved.
+    </footer>
   </div>
 
   <script>
-    // 가짜 학생 계정 데이터 생성 (1~3학년, 1~7반, 1~5명)
+    // 가짜 계정 데이터
     const students = [];
     for (let g = 1; g <= 3; g++) {
       for (let c = 1; c <= 7; c++) {
@@ -219,18 +234,14 @@
     function showMain(student) {
       document.getElementById("loginPage").style.display = "none";
       document.getElementById("mainPage").style.display = "block";
-      document.getElementById("studentInfo").textContent = `${student.grade}학년 ${student.classNum}반 (${student.id})`;
     }
 
     function logout() {
       localStorage.removeItem("currentStudent");
       document.getElementById("mainPage").style.display = "none";
       document.getElementById("loginPage").style.display = "flex";
-      document.getElementById("studentId").value = "";
-      document.getElementById("studentPw").value = "";
     }
 
-    // 자동 로그인 유지
     window.onload = () => {
       const saved = localStorage.getItem("currentStudent");
       if (saved) showMain(JSON.parse(saved));
