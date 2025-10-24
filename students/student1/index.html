@@ -13,26 +13,12 @@
       background: #ffffff;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 8%;
+      justify-content: center;
+      padding: 16px;
       font-weight: bold;
     }
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .logo img {
-      height: 38px;
-    }
-    .logo span {
-      font-size: 17px;
-      color: #1f57c9;
-      font-weight: 700;
-    }
     nav a {
-      margin: 0 14px;
+      margin: 0 20px;
       color: #222;
       text-decoration: none;
       font-size: 15px;
@@ -145,6 +131,7 @@
       <h1>창원성민여자고등학교</h1>
       <p>포털 로그인</p>
 
+      <!-- 학년/반 선택 삭제 완료 -->
       <input type="text" id="studentId" placeholder="아이디 (예: 10101)" />
       <input type="password" id="studentPw" placeholder="비밀번호" />
 
@@ -155,10 +142,6 @@
   <!-- 메인 페이지 -->
   <div class="main-page" id="mainPage">
     <header>
-      <div class="logo">
-        <img src="logo.png" alt="창원성민여자고등학교 로고">
-        <span>창원성민여자고등학교</span>
-      </div>
       <nav>
         <a href="#">홈</a>
         <a href="#">공지사항</a>
@@ -206,7 +189,7 @@
     const students = [];
     for (let g = 1; g <= 3; g++) {
       for (let c = 1; c <= 7; c++) {
-        for (let n = 1; n <= 28; n++) {
+        for (let n = 1; n <= 5; n++) {
           const id = `${g}${String(c).padStart(2, "0")}${String(n).padStart(2, "0")}`;
           students.push({ id, pw: "1234" });
         }
