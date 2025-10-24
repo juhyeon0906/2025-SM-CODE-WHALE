@@ -6,196 +6,234 @@
   <title>창원성민여자고등학교 포털</title>
   <style>
     * { box-sizing: border-box; font-family: "Noto Sans KR", sans-serif; }
-    body { margin: 0; background: #f8fafc; color: #333; }
-    .hidden { display: none; }
+    body { margin: 0; background: #f3f8ff; color: #333; }
 
-    /* 박스 기본 스타일 */
-    .center-box {
-      display: flex; justify-content: center; align-items: center;
+    /* ===== 로그인 영역 ===== */
+    .login-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       height: 100vh;
+      background: linear-gradient(180deg, #e8f1ff 0%, #ffffff 100%);
     }
-    .card {
+    .login-box {
       background: white;
-      padding: 40px;
+      width: 380px;
       border-radius: 16px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      width: 340px;
-      border: 1px solid #eee;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      padding: 40px;
+      text-align: center;
+      border-top: 6px solid #2b6ef2;
     }
-    .card h1 { text-align: center; color: #2563eb; margin-bottom: 6px; }
-    .card p { text-align: center; color: #777; margin-bottom: 20px; }
+    .login-box h1 {
+      font-size: 22px;
+      color: #2b6ef2;
+      margin-bottom: 6px;
+    }
+    .login-box p {
+      color: #777;
+      margin-bottom: 24px;
+    }
     input {
-      width: 100%; padding: 10px; margin-bottom: 12px;
-      border: 1px solid #ccc; border-radius: 8px;
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      outline: none;
+      transition: 0.2s;
     }
     input:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
-      outline: none;
+      border-color: #2b6ef2;
+      box-shadow: 0 0 0 2px rgba(43,110,242,0.2);
+    }
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 12px;
     }
     button {
-      width: 100%; padding: 10px;
-      background: #2563eb; color: white;
-      border: none; border-radius: 8px;
-      font-weight: bold; cursor: pointer;
+      width: 100%;
+      background: #2b6ef2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
     }
-    button:hover { background: #1d4ed8; }
-    .link {
-      text-align: center; margin-top: 8px; font-size: 13px;
+    button:hover { background: #1f57c9; transform: translateY(-2px); }
+    .footer {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #888;
     }
-    .link a { color: #2563eb; text-decoration: none; }
-    .link a:hover { text-decoration: underline; }
 
-    /* 메인 페이지 */
+    /* ===== 메인 페이지 ===== */
+    .main-page {
+      display: none;
+      min-height: 100vh;
+      background: #f5f7fb;
+    }
     header {
       background: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
       padding: 16px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
-    header h2 { color: #2563eb; margin: 0; }
+    header h2 {
+      color: #2b6ef2;
+      margin: 0;
+    }
     header button {
-      background: #2563eb; color: white;
-      border: none; border-radius: 6px;
-      padding: 6px 14px; cursor: pointer;
-    }
-    main { padding: 40px; }
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-    }
-    .card-item {
-      background: white;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      background: #2b6ef2;
+      border: none;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
       transition: 0.2s;
     }
-    .card-item:hover { transform: translateY(-4px); }
+    header button:hover { background: #1f57c9; }
+    main {
+      padding: 40px;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 6px 14px rgba(0,0,0,0.08); }
     footer {
-      text-align: center; padding: 20px;
-      color: #999; font-size: 13px;
+      text-align: center;
+      padding: 20px;
+      color: #999;
+      font-size: 13px;
     }
   </style>
 </head>
 <body>
 
-  <!-- 로그인 페이지 -->
-  <div id="loginPage" class="center-box">
-    <div class="card">
+  <!-- 로그인 화면 -->
+  <div class="login-wrapper" id="loginPage">
+    <div class="login-box">
       <h1>창원성민여자고등학교</h1>
-      <p>로그인</p>
-      <input type="email" id="loginEmail" placeholder="이메일" />
-      <input type="password" id="loginPw" placeholder="비밀번호" />
-      <button onclick="login()">로그인</button>
-      <div class="link">
-        <a href="#" onclick="showRegister()">회원가입</a>
-      </div>
-    </div>
-  </div>
+      <p>포털 로그인</p>
 
-  <!-- 회원가입 페이지 -->
-  <div id="registerPage" class="center-box hidden">
-    <div class="card">
-      <h1>회원가입</h1>
-      <p>창원성민여자고등학교 계정 생성</p>
-      <input type="email" id="regEmail" placeholder="이메일" />
-      <input type="password" id="regPw" placeholder="비밀번호" />
-      <input type="password" id="regPwCheck" placeholder="비밀번호 확인" />
-      <button onclick="register()">회원가입</button>
-      <div class="link">
-        <a href="#" onclick="showLogin()">로그인으로 돌아가기</a>
-      </div>
+      <select id="grade">
+        <option value="">학년 선택</option>
+        <option value="1">1학년</option>
+        <option value="2">2학년</option>
+        <option value="3">3학년</option>
+      </select>
+
+      <select id="classNum">
+        <option value="">반 선택</option>
+        <option value="1">1반</option>
+        <option value="2">2반</option>
+        <option value="3">3반</option>
+        <option value="4">4반</option>
+        <option value="5">5반</option>
+        <option value="6">6반</option>
+        <option value="7">7반</option>
+      </select>
+
+      <input type="text" id="studentId" placeholder="아이디 (예: 10101)" />
+      <input type="password" id="studentPw" placeholder="비밀번호" />
+
+      <button onclick="login()">로그인</button>
+
+      <div class="footer">© 2025 창원성민여자고등학교 포털</div>
     </div>
   </div>
 
   <!-- 메인 페이지 -->
-  <div id="mainPage" class="hidden">
+  <div class="main-page" id="mainPage">
     <header>
-      <h2>창원성민여자고등학교 포털</h2>
+      <h2>창원성민여자고 포털</h2>
       <div>
-        <span id="userEmail" style="margin-right:10px;"></span>
+        <span id="studentInfo" style="margin-right:10px; color:#555;"></span>
         <button onclick="logout()">로그아웃</button>
       </div>
     </header>
 
     <main>
-      <h2>메인 대시보드</h2>
+      <h3 style="margin-bottom:20px;">📘 학교 주요 메뉴</h3>
       <div class="card-grid">
-        <div class="card-item" style="background:#e0f2fe;">📅 학사일정</div>
-        <div class="card-item" style="background:#dcfce7;">📊 성적조회</div>
-        <div class="card-item" style="background:#fef9c3;">📢 공지사항</div>
+        <div class="card" onclick="alert('공지사항 페이지로 이동 예정!')">📢 공지사항</div>
+        <div class="card" onclick="alert('성적조회 페이지로 이동 예정!')">📊 성적조회</div>
+        <div class="card" onclick="alert('급식표 페이지로 이동 예정!')">🍱 급식표</div>
+        <div class="card" onclick="alert('시간표 페이지로 이동 예정!')">⏰ 시간표</div>
+        <div class="card" onclick="alert('상담신청 페이지로 이동 예정!')">💬 상담신청</div>
       </div>
     </main>
 
-    <footer>
-      © 2025 창원성민여자고등학교 | 제작: <a href="https://gptonline.ai/ko/" target="_blank">GPT Online</a>
-    </footer>
+    <footer>© 2025 창원성민여자고등학교 | 제작 도움: <a href="https://gptonline.ai/ko/" target="_blank">GPT Online</a></footer>
   </div>
 
   <script>
-    // 가짜 회원 데이터 저장소 (실제로는 서버 DB)
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-
-    function showLogin() {
-      document.getElementById("loginPage").classList.remove("hidden");
-      document.getElementById("registerPage").classList.add("hidden");
-      document.getElementById("mainPage").classList.add("hidden");
-    }
-
-    function showRegister() {
-      document.getElementById("loginPage").classList.add("hidden");
-      document.getElementById("registerPage").classList.remove("hidden");
-      document.getElementById("mainPage").classList.add("hidden");
-    }
-
-    function showMain(email) {
-      document.getElementById("loginPage").classList.add("hidden");
-      document.getElementById("registerPage").classList.add("hidden");
-      document.getElementById("mainPage").classList.remove("hidden");
-      document.getElementById("userEmail").textContent = email;
-    }
-
-    function register() {
-      const email = document.getElementById("regEmail").value;
-      const pw = document.getElementById("regPw").value;
-      const pwCheck = document.getElementById("regPwCheck").value;
-
-      if (!email || !pw) return alert("이메일과 비밀번호를 입력하세요.");
-      if (pw !== pwCheck) return alert("비밀번호가 일치하지 않습니다.");
-
-      const exists = users.find(u => u.email === email);
-      if (exists) return alert("이미 가입된 이메일입니다.");
-
-      users.push({ email, pw });
-      localStorage.setItem("users", JSON.stringify(users));
-      alert("회원가입이 완료되었습니다!");
-      showLogin();
+    // 가짜 학생 계정 데이터 생성 (1~3학년, 1~7반, 1~5명)
+    const students = [];
+    for (let g = 1; g <= 3; g++) {
+      for (let c = 1; c <= 7; c++) {
+        for (let n = 1; n <= 5; n++) {
+          const id = `${g}${String(c).padStart(2, "0")}${String(n).padStart(2, "0")}`;
+          students.push({ id, pw: "1234", grade: g, classNum: c });
+        }
+      }
     }
 
     function login() {
-      const email = document.getElementById("loginEmail").value;
-      const pw = document.getElementById("loginPw").value;
+      const grade = document.getElementById("grade").value;
+      const classNum = document.getElementById("classNum").value;
+      const id = document.getElementById("studentId").value.trim();
+      const pw = document.getElementById("studentPw").value.trim();
 
-      const user = users.find(u => u.email === email && u.pw === pw);
-      if (!user) return alert("이메일 또는 비밀번호가 잘못되었습니다.");
+      if (!grade || !classNum || !id || !pw) return alert("모든 항목을 입력하세요.");
 
-      localStorage.setItem("currentUser", email);
-      showMain(email);
+      const student = students.find(s => s.id === id && s.pw === pw);
+      if (!student) {
+        alert("아이디 또는 비밀번호가 올바르지 않습니다.");
+        return;
+      }
+
+      localStorage.setItem("currentStudent", JSON.stringify(student));
+      showMain(student);
+    }
+
+    function showMain(student) {
+      document.getElementById("loginPage").style.display = "none";
+      document.getElementById("mainPage").style.display = "block";
+      document.getElementById("studentInfo").textContent = `${student.grade}학년 ${student.classNum}반 (${student.id})`;
     }
 
     function logout() {
-      localStorage.removeItem("currentUser");
-      showLogin();
+      localStorage.removeItem("currentStudent");
+      document.getElementById("mainPage").style.display = "none";
+      document.getElementById("loginPage").style.display = "flex";
+      document.getElementById("studentId").value = "";
+      document.getElementById("studentPw").value = "";
     }
 
     // 자동 로그인 유지
-    window.onload = function() {
-      const current = localStorage.getItem("currentUser");
-      if (current) showMain(current);
+    window.onload = () => {
+      const saved = localStorage.getItem("currentStudent");
+      if (saved) showMain(JSON.parse(saved));
     };
   </script>
 </body>
