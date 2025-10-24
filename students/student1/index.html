@@ -1,151 +1,202 @@
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>창원성민여자고 리로스쿨 포털</title>
+  <style>
+    * { box-sizing: border-box; font-family: "Noto Sans KR", sans-serif; }
+    body { margin: 0; background: #f8fafc; color: #333; }
+    .hidden { display: none; }
 
-export default function StudentPortal() {
-  return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">🎓 학생 포털</h1>
+    /* 박스 기본 스타일 */
+    .center-box {
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 340px;
+      border: 1px solid #eee;
+    }
+    .card h1 { text-align: center; color: #2563eb; margin-bottom: 6px; }
+    .card p { text-align: center; color: #777; margin-bottom: 20px; }
+    input {
+      width: 100%; padding: 10px; margin-bottom: 12px;
+      border: 1px solid #ccc; border-radius: 8px;
+    }
+    input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+      outline: none;
+    }
+    button {
+      width: 100%; padding: 10px;
+      background: #2563eb; color: white;
+      border: none; border-radius: 8px;
+      font-weight: bold; cursor: pointer;
+    }
+    button:hover { background: #1d4ed8; }
+    .link {
+      text-align: center; margin-top: 8px; font-size: 13px;
+    }
+    .link a { color: #2563eb; text-decoration: none; }
+    .link a:hover { text-decoration: underline; }
 
-      <Tabs defaultValue="shuttle" className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="shuttle">🚌 셔틀버스</TabsTrigger>
-          <TabsTrigger value="schedule">📅 시간표 및 학사일정</TabsTrigger>
-          <TabsTrigger value="events">🎉 학교 행사</TabsTrigger>
-        </TabsList>
+    /* 메인 페이지 */
+    header {
+      background: white;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    header h2 { color: #2563eb; margin: 0; }
+    header button {
+      background: #2563eb; color: white;
+      border: none; border-radius: 6px;
+      padding: 6px 14px; cursor: pointer;
+    }
+    main { padding: 40px; }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .card-item {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: 0.2s;
+    }
+    .card-item:hover { transform: translateY(-4px); }
+    footer {
+      text-align: center; padding: 20px;
+      color: #999; font-size: 13px;
+    }
+  </style>
+</head>
+<body>
 
-        {/* 셔틀버스 정보 탭 */}
-        <TabsContent value="shuttle">
-          <Card>
-            <CardContent className="p-4">
-              <h2 className="text-xl font-semibold mb-2">셔틀버스 시간표</h2>
-              <ul className="list-disc list-inside space-y-1">
-                <li>08:00 - 정문 출발</li>
-                <li>09:30 - 후문 출발</li>
-                <li>12:00 - 기숙사 출발</li>
-                <li>17:00 - 캠퍼스 순환</li>
-              </ul>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* 수업 시간표 및 학사일정 탭 */}
-        <TabsContent value="schedule">
-          <Card>
-            <CardContent className="p-4 space-y-6">
-              {/* 수업 시간표 (표 형태) */}
-              <div>
-                <h2 className="text-xl font-semibold mb-4">수업 시간표</h2>
-                <table className="w-full table-auto border border-gray-300 text-sm">
-                  <thead className="bg-gray-100">
-                    <tr>
-                      <th className="border px-4 py-2">요일</th>
-                      <th className="border px-4 py-2">과목</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="border px-4 py-2">월요일</td>
-                      <td className="border px-4 py-2">컴퓨터공학 / 수학</td>
-                    </tr>
-                    <tr>
-                      <td className="border px-4 py-2">화요일</td>
-                      <td className="border px-4 py-2">영어 / 프로그래밍</td>
-                    </tr>
-                    <tr>
-                      <td className="border px-4 py-2">수요일</td>
-                      <td className="border px-4 py-2">데이터베이스 / 자율학습</td>
-                    </tr>
-                    <tr>
-                      <td className="border px-4 py-2">목요일</td>
-                      <td className="border px-4 py-2">소프트웨어 공학 / 체육</td>
-                    </tr>
-                    <tr>
-                      <td className="border px-4 py-2">금요일</td>
-                      <td className="border px-4 py-2">프로젝트 실습</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              {/* 학사일정 (달력 디자인) */}
-              <div>
-                <h2 className="text-xl font-semibold mb-4">학사일정</h2>
-                <div className="grid grid-cols-7 gap-2 text-center text-xs">
-                  <div className="font-bold">일</div>
-                  <div className="font-bold">월</div>
-                  <div className="font-bold">화</div>
-                  <div className="font-bold">수</div>
-                  <div className="font-bold">목</div>
-                  <div className="font-bold">금</div>
-                  <div className="font-bold">토</div>
-
-                  {Array.from({ length: 30 }, (_, i) => {
-                    const day = i + 1;
-                    const isHoliday =
-                      day === 5 || // 어린이날
-                      day === 6 || // 현충일
-                      (day >= 15 && day <= 19) || // 중간고사
-                      (day >= 10 && day <= 14); // 기말고사
-                    return (
-                      <div
-                        key={day}
-                        className={`p-2 rounded border text-center ${
-                          (day >= 15 && day <= 19) ? "bg-yellow-200" :
-                          (day >= 10 && day <= 14) ? "bg-red-200" :
-                          (day === 5 || day === 6) ? "bg-blue-200" : ""
-                        }`}
-                      >
-                        {day}
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="mt-2 text-xs space-y-1">
-                  <div><span className="inline-block w-3 h-3 bg-yellow-200 mr-2"></span>중간고사</div>
-                  <div><span className="inline-block w-3 h-3 bg-red-200 mr-2"></span>기말고사</div>
-                  <div><span className="inline-block w-3 h-3 bg-blue-200 mr-2"></span>공휴일</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* 학교 행사 및 참가 신청 탭 */}
-        <TabsContent value="events">
-          <Card>
-            <CardContent className="p-4 space-y-4">
-              <div>
-                <h2 className="text-xl font-semibold mb-2">다가오는 행사</h2>
-                <ul className="list-disc list-inside">
-                  <li>5월 10일 - 봄 축제</li>
-                  <li>6월 1일 - 동아리 전시회</li>
-                  <li>6월 20일 - 종강파티</li>
-                </ul>
-              </div>
-
-              <div>
-                <h2 className="text-xl font-semibold mb-2">참가 신청</h2>
-                <form className="space-y-2">
-                  <input
-                    type="text"
-                    placeholder="이름"
-                    className="border rounded p-2 w-full"
-                  />
-                  <select className="border rounded p-2 w-full">
-                    <option>참가할 행사 선택</option>
-                    <option>봄 축제</option>
-                    <option>동아리 전시회</option>
-                    <option>종강파티</option>
-                  </select>
-                  <Button type="submit">신청하기</Button>
-                </form>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+  <!-- 로그인 페이지 -->
+  <div id="loginPage" class="center-box">
+    <div class="card">
+      <h1>창원성민여자고등학교</h1>
+      <p>리로스쿨 로그인</p>
+      <input type="email" id="loginEmail" placeholder="이메일" />
+      <input type="password" id="loginPw" placeholder="비밀번호" />
+      <button onclick="login()">로그인</button>
+      <div class="link">
+        <a href="#" onclick="showRegister()">회원가입</a>
+      </div>
     </div>
-  );
-}
+  </div>
+
+  <!-- 회원가입 페이지 -->
+  <div id="registerPage" class="center-box hidden">
+    <div class="card">
+      <h1>회원가입</h1>
+      <p>창원성민여자고 리로스쿨 계정 생성</p>
+      <input type="email" id="regEmail" placeholder="이메일" />
+      <input type="password" id="regPw" placeholder="비밀번호" />
+      <input type="password" id="regPwCheck" placeholder="비밀번호 확인" />
+      <button onclick="register()">회원가입</button>
+      <div class="link">
+        <a href="#" onclick="showLogin()">로그인으로 돌아가기</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 메인 페이지 -->
+  <div id="mainPage" class="hidden">
+    <header>
+      <h2>리로스쿨 포털</h2>
+      <div>
+        <span id="userEmail" style="margin-right:10px;"></span>
+        <button onclick="logout()">로그아웃</button>
+      </div>
+    </header>
+
+    <main>
+      <h2>메인 대시보드</h2>
+      <div class="card-grid">
+        <div class="card-item" style="background:#e0f2fe;">📅 학사일정</div>
+        <div class="card-item" style="background:#dcfce7;">📊 성적조회</div>
+        <div class="card-item" style="background:#fef9c3;">📢 공지사항</div>
+      </div>
+    </main>
+
+    <footer>
+      © 2025 창원성민여자고등학교 | 제작: <a href="https://gptonline.ai/ko/" target="_blank">GPT Online</a>
+    </footer>
+  </div>
+
+  <script>
+    // 가짜 회원 데이터 저장소 (실제로는 서버 DB)
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+
+    function showLogin() {
+      document.getElementById("loginPage").classList.remove("hidden");
+      document.getElementById("registerPage").classList.add("hidden");
+      document.getElementById("mainPage").classList.add("hidden");
+    }
+
+    function showRegister() {
+      document.getElementById("loginPage").classList.add("hidden");
+      document.getElementById("registerPage").classList.remove("hidden");
+      document.getElementById("mainPage").classList.add("hidden");
+    }
+
+    function showMain(email) {
+      document.getElementById("loginPage").classList.add("hidden");
+      document.getElementById("registerPage").classList.add("hidden");
+      document.getElementById("mainPage").classList.remove("hidden");
+      document.getElementById("userEmail").textContent = email;
+    }
+
+    function register() {
+      const email = document.getElementById("regEmail").value;
+      const pw = document.getElementById("regPw").value;
+      const pwCheck = document.getElementById("regPwCheck").value;
+
+      if (!email || !pw) return alert("이메일과 비밀번호를 입력하세요.");
+      if (pw !== pwCheck) return alert("비밀번호가 일치하지 않습니다.");
+
+      const exists = users.find(u => u.email === email);
+      if (exists) return alert("이미 가입된 이메일입니다.");
+
+      users.push({ email, pw });
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("회원가입이 완료되었습니다!");
+      showLogin();
+    }
+
+    function login() {
+      const email = document.getElementById("loginEmail").value;
+      const pw = document.getElementById("loginPw").value;
+
+      const user = users.find(u => u.email === email && u.pw === pw);
+      if (!user) return alert("이메일 또는 비밀번호가 잘못되었습니다.");
+
+      localStorage.setItem("currentUser", email);
+      showMain(email);
+    }
+
+    function logout() {
+      localStorage.removeItem("currentUser");
+      showLogin();
+    }
+
+    // 자동 로그인 유지
+    window.onload = function() {
+      const current = localStorage.getItem("currentUser");
+      if (current) showMain(current);
+    };
+  </script>
+</body>
+</html>
