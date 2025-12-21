@@ -6,7 +6,13 @@
   <title>창원성민여자고등학교 포털</title>
   <style>
     * { box-sizing: border-box; font-family: "Noto Sans KR", sans-serif; }
-    body { margin: 0; background: #f5f8ff; color: #333; }
+
+    /* 전체 배경 */
+    body {
+      margin: 0;
+      background: #EFFCFF;
+      color: #333;
+    }
 
     /* 상단 네비게이션 */
     header {
@@ -18,19 +24,21 @@
       padding: 12px 8%;
       font-weight: bold;
     }
+
     .logo {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    .logo img {
-      height: 38px;
-    }
+
+    .logo img { height: 38px; }
+
     .logo span {
       font-size: 17px;
-      color: #1f57c9;
+      color: #006F86;
       font-weight: 700;
     }
+
     nav a {
       margin: 0 14px;
       color: #222;
@@ -38,7 +46,8 @@
       font-size: 15px;
       transition: 0.2s;
     }
-    nav a:hover { color: #1f57c9; }
+
+    nav a:hover { color: #006F86; }
 
     /* 로그인 영역 */
     .login-wrapper {
@@ -47,8 +56,9 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      background: linear-gradient(180deg, #e8f1ff 0%, #ffffff 100%);
+      background: linear-gradient(180deg, #EFFCFF 0%, #ffffff 100%);
     }
+
     .login-box {
       background: white;
       width: 380px;
@@ -56,17 +66,20 @@
       box-shadow: 0 6px 20px rgba(0,0,0,0.08);
       padding: 40px;
       text-align: center;
-      border-top: 6px solid #1f57c9;
+      border-top: 6px solid #006F86;
     }
+
     .login-box h1 {
       font-size: 22px;
-      color: #1f57c9;
+      color: #006F86;
       margin-bottom: 6px;
     }
+
     .login-box p {
       color: #777;
       margin-bottom: 24px;
     }
+
     input {
       width: 100%;
       padding: 10px;
@@ -76,13 +89,15 @@
       outline: none;
       transition: 0.2s;
     }
+
     input:focus {
-      border-color: #1f57c9;
-      box-shadow: 0 0 0 2px rgba(31,87,201,0.2);
+      border-color: #006F86;
+      box-shadow: 0 0 0 2px rgba(0,111,134,0.2);
     }
+
     button {
       width: 100%;
-      background: #1f57c9;
+      background: #006F86;
       color: white;
       border: none;
       border-radius: 8px;
@@ -91,17 +106,35 @@
       cursor: pointer;
       transition: 0.2s;
     }
-    button:hover { background: #1745a9; transform: translateY(-2px); }
+
+    button:hover {
+      background: #006F86;
+      transform: translateY(-2px);
+    }
 
     /* 메인 페이지 */
-    .main-page { display: none; background: #f5f8ff; min-height: 100vh; }
+    .main-page {
+      display: none;
+      background: #EFFCFF;
+      min-height: 100vh;
+    }
+
     .hero {
-      background: #eaf1ff;
+      background: #E5FEFF;
       text-align: center;
       padding: 60px 20px;
     }
-    .hero h2 { font-size: 28px; margin: 0; color: #333; }
-    .hero span { color: #1f57c9; font-weight: bold; }
+
+    .hero h2 {
+      font-size: 28px;
+      margin: 0;
+      color: #333;
+    }
+
+    .hero span {
+      color: #006F86;
+      font-weight: bold;
+    }
 
     .menu-container {
       display: grid;
@@ -109,6 +142,7 @@
       gap: 24px;
       padding: 60px 10%;
     }
+
     .menu-card {
       background: white;
       border-radius: 14px;
@@ -118,14 +152,27 @@
       cursor: pointer;
       transition: 0.2s;
     }
-    .menu-card:hover { transform: translateY(-5px); box-shadow: 0 6px 14px rgba(0,0,0,0.08); }
+
+    .menu-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+    }
+
     .menu-card img {
       width: 60px;
       height: 60px;
       margin-bottom: 12px;
     }
-    .menu-card h3 { margin: 10px 0 6px; color: #1f57c9; }
-    .menu-card p { color: #555; font-size: 14px; }
+
+    .menu-card h3 {
+      margin: 10px 0 6px;
+      color: #006F86;
+    }
+
+    .menu-card p {
+      color: #555;
+      font-size: 14px;
+    }
 
     footer {
       background: white;
@@ -156,7 +203,7 @@
   <div class="main-page" id="mainPage">
     <header>
       <div class="logo">
-        <img src="https://primary-green-gitpuljxwi.edgeone.app/sungmin.png" alt="성민여고 로고">
+        <img src="https://image2url.com/images/1766125126777-0984d86f-f503-48de-b075-554adb638e16.png">
         <span>창원성민여자고등학교</span>
       </div>
       <nav>
@@ -169,28 +216,31 @@
     </header>
 
     <div class="hero">
-      <h2><span>창원성민여자고등학교</h2>
+      <h2><span>창원성민여자고등학교</span></h2>
       <p style="color:#555; margin-top:8px;">창원성민여자고등학교 포털에 오신 것을 환영합니다.</p>
     </div>
 
     <section class="menu-container">
-      <div class="menu-card" onclick="alert('학사일정 페이지로 이동 예정!')">
-        <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png" alt="학사일정">
+      <div class="menu-card" onclick="location.href='jm.html'">
+        <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png">
         <h3>학사일정</h3>
         <p>학교의 주요 학사 일정을 확인하세요.</p>
       </div>
-      <div class="menu-card" onclick="alert('급식 페이지로 이동 예정!')">
-        <img src="https://cdn-icons-png.flaticon.com/512/3480/3480521.png" alt="급식">
+
+      <div class="menu-card" onclick="location.href='bob.html'">
+        <img src="https://image2url.com/images/1766127272828-be215f05-6a85-45ef-b145-8924b37a071d.png">
         <h3>오늘의 급식</h3>
         <p>오늘의 맛있는 급식 메뉴를 확인하세요.</p>
       </div>
+
       <div class="menu-card" onclick="alert('성적조회 페이지로 이동 예정!')">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="성적조회">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
         <h3>성적조회</h3>
         <p>중간·기말 성적 및 누적 성적을 확인합니다.</p>
       </div>
-      <div class="menu-card" onclick="alert('시간표 페이지로 이동 예정!')">
-        <img src="https://cdn-icons-png.flaticon.com/512/1688/1688450.png" alt="시간표">
+
+      <div class="menu-card" onclick="location.href='hn.html'">
+        <img src="https://image2url.com/images/1766127328105-856095c2-4152-4bfb-82fd-122b8a2a41be.png">
         <h3>시간표</h3>
         <p>나의 오늘 수업과 과목을 한눈에 확인하세요.</p>
       </div>
@@ -202,7 +252,6 @@
   </div>
 
   <script>
-    // 임시 계정 데이터
     const students = [];
     for (let g = 1; g <= 3; g++) {
       for (let c = 1; c <= 7; c++) {
@@ -220,10 +269,7 @@
       if (!id || !pw) return alert("아이디와 비밀번호를 모두 입력하세요.");
 
       const student = students.find(s => s.id === id && s.pw === pw);
-      if (!student) {
-        alert("아이디 또는 비밀번호가 올바르지 않습니다.");
-        return;
-      }
+      if (!student) return alert("아이디 또는 비밀번호가 올바르지 않습니다.");
 
       localStorage.setItem("currentStudent", JSON.stringify(student));
       showMain();
